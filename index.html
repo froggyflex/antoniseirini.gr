@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Wedding invitation for Antonis and Eirini, September 27, 2026 in Rhodes, Greece."
+    />
+    <title>Antonis & Eirini | Wedding Invitation</title>
+    <link rel="preload" href="assets/rhodes-hero.png" as="image" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="Antonis and Eirini home">
+        <span>A</span><i>&</i><span>E</span>
+      </a>
+      <nav>
+        <a href="#story">Story</a>
+        <a href="#day">The Day</a>
+        <a href="#rhodes">Rhodes</a>
+        <a href="#photos">Photos</a>
+        <a href="#rsvp">RSVP</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <img class="hero-bg" src="assets/rhodes-hero.png" alt="" />
+        <canvas id="constellation" aria-hidden="true"></canvas>
+        <div class="hero-shade"></div>
+
+        <div class="hero-content">
+          <p class="eyebrow hero-meta">27 September 2026 - Rhodes, Greece</p>
+          <div class="paper-invite" aria-hidden="true">
+            <div class="paper-card">
+              <span class="invite-small">Save the date</span>
+              <span class="invite-names">A & E</span>
+              <span class="invite-date">27.09.2026</span>
+            </div>
+            <div class="envelope-pocket"></div>
+            <div class="envelope-line line-left"></div>
+            <div class="envelope-line line-right"></div>
+          </div>
+          <h1 id="hero-title">Antonis & Eirini</h1>
+          <p class="hero-copy">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+            vitae lacus sed sem commodo luctus in a place made for sea, light,
+            and celebration.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#rsvp">Reply</a>
+            <a class="button ghost" href="#calendar">Add to calendar</a>
+          </div>
+        </div>
+
+        <div class="scroll-cue" aria-hidden="true">
+          <span></span>
+        </div>
+      </section>
+
+      <section class="intro-section" id="story">
+        <div class="section-kicker">A small equation, a long journey</div>
+        <div class="split">
+          <div>
+            <h2>Two lives, one shared route.</h2>
+          </div>
+          <div class="body-copy">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+              blandit, augue vitae dignissim aliquet, nibh sem feugiat neque,
+              vitae dignissim sem mi vitae arcu.
+            </p>
+            <p>
+              The invitation brings together Antonis' mathematical world and
+              Eirini's love of travel: soft geometry, island routes, and a
+              modern animated map that settles into their initials.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="day-section" id="day" aria-labelledby="day-title">
+        <div class="section-kicker">The wedding day</div>
+        <h2 id="day-title">Sunday, 27 September 2026</h2>
+        <div class="timeline">
+          <article class="timeline-item">
+            <span class="time">17:30</span>
+            <div>
+              <h3>Ceremony</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Venue
+                details can be replaced when confirmed.
+              </p>
+            </div>
+          </article>
+          <article class="timeline-item">
+            <span class="time">20:00</span>
+            <div>
+              <h3>Celebration</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dinner,
+                dancing, and a night by the island breeze.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="rhodes-section" id="rhodes" aria-labelledby="rhodes-title">
+        <div class="route-panel">
+          <div class="section-kicker">Rhodes notes</div>
+          <h2 id="rhodes-title">A destination made for late summer light.</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
+            at ex porta, efficitur lacus in, pulvinar eros. Add ferry, flight,
+            transfer, and local tips here.
+          </p>
+        </div>
+        <div class="map-visual" aria-label="Decorative route from sea to Rhodes">
+          <span class="pin pin-a">A</span>
+          <span class="pin pin-e">E</span>
+          <svg viewBox="0 0 500 360" aria-hidden="true">
+            <path class="grid-line" d="M45 280 C155 110 315 330 455 85" />
+            <path class="route-line" d="M70 245 C165 190 220 105 304 145 S410 220 445 108" />
+            <circle cx="70" cy="245" r="5" />
+            <circle cx="304" cy="145" r="5" />
+            <circle cx="445" cy="108" r="5" />
+          </svg>
+        </div>
+      </section>
+
+      <section class="calendar-section" id="calendar" aria-labelledby="calendar-title">
+        <div>
+          <div class="section-kicker">Calendar</div>
+          <h2 id="calendar-title">Save the important moments.</h2>
+        </div>
+        <div class="calendar-actions" id="calendar-actions"></div>
+      </section>
+
+      <section class="photo-section" id="photos" aria-labelledby="photos-title">
+        <div class="photo-copy">
+          <div class="section-kicker">Shared memories</div>
+          <h2 id="photos-title">Upload photos from the wedding.</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Guests can
+            share their favorite photos here once storage is connected.
+          </p>
+          <p class="data-note">
+            Photo uploads need external storage such as Cloudinary, Uploadcare,
+            Supabase Storage, Google Drive, or a custom backend.
+          </p>
+        </div>
+
+        <form class="photo-form" id="photo-form">
+          <label>
+            Your name
+            <input name="photoName" autocomplete="name" placeholder="Your name" />
+          </label>
+          <label class="upload-drop">
+            <input id="photo-files" name="photos" type="file" accept="image/*" multiple />
+            <span>Choose photos</span>
+            <small>JPG, PNG, or HEIC. Up to 8 MB each.</small>
+          </label>
+          <div class="photo-preview" id="photo-preview" aria-live="polite"></div>
+          <button class="button primary form-button" type="submit">Upload photos</button>
+          <p class="form-status" id="photo-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="rsvp-section" id="rsvp" aria-labelledby="rsvp-title">
+        <div class="rsvp-copy">
+          <div class="section-kicker">RSVP</div>
+          <h2 id="rsvp-title">Tell us what to prepare for.</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Please
+            reply for the ceremony and celebration so the guest list stays clear.
+          </p>
+          <p class="data-note">
+            RSVP submissions are ready to connect to Formspree, Google Apps
+            Script, or your own backend.
+          </p>
+        </div>
+
+        <form class="rsvp-form" id="rsvp-form">
+          <label>
+            Full name
+            <input name="name" autocomplete="name" required placeholder="Your name" />
+          </label>
+
+          <label>
+            Email
+            <input name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
+          </label>
+
+          <label>
+            Number of guests
+            <input name="guests" type="number" min="1" max="8" value="1" required />
+          </label>
+
+          <fieldset>
+            <legend>Attendance</legend>
+            <label class="choice">
+              <input type="checkbox" name="events" value="ceremony" checked />
+              <span>Ceremony</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="events" value="celebration" checked />
+              <span>Celebration</span>
+            </label>
+          </fieldset>
+
+          <label>
+            Message
+            <textarea name="message" rows="4" placeholder="Dietary notes, song requests, or a short message"></textarea>
+          </label>
+
+          <button class="button primary form-button" type="submit">Send RSVP</button>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <p>Antonis & Eirini - 27.09.2026 - Rhodes</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
