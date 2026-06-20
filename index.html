@@ -19,8 +19,6 @@
       <nav>
         <a href="#story">Story</a>
         <a href="#day">The Day</a>
-        <a href="#rhodes">Rhodes</a>
-        <a href="#photos">Photos</a>
         <a href="#rsvp">RSVP</a>
       </nav>
     </header>
@@ -51,7 +49,6 @@
           </p>
           <div class="hero-actions">
             <a class="button primary" href="#rsvp">Reply</a>
-            <a class="button ghost" href="#calendar">Add to calendar</a>
           </div>
         </div>
 
@@ -78,6 +75,34 @@
               modern animated map that settles into their initials.
             </p>
           </div>
+        </div>
+        <div class="function-visual" aria-label="Animated mathematical route from A to E">
+          <span class="function-pin function-a">A</span>
+          <span class="function-pin function-e">E</span>
+          <svg viewBox="0 0 960 280" aria-hidden="true">
+            <defs>
+              <linearGradient id="functionFill" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#447f8e" stop-opacity="0.14" />
+                <stop offset="100%" stop-color="#c98685" stop-opacity="0.16" />
+              </linearGradient>
+            </defs>
+            <path
+              class="function-area"
+              d="M160 215 C265 176 330 114 424 142 C510 168 570 82 660 108 C742 132 776 200 846 68 L846 238 L160 238 Z"
+            />
+            <path
+              class="function-ghost"
+              d="M160 215 C265 176 330 114 424 142 C510 168 570 82 660 108 C742 132 776 200 846 68"
+            />
+            <path
+              class="function-path"
+              d="M160 215 C265 176 330 114 424 142 C510 168 570 82 660 108 C742 132 776 200 846 68"
+            />
+            <circle class="function-point p1" cx="160" cy="215" r="5" />
+            <circle class="function-point p2" cx="424" cy="142" r="5" />
+            <circle class="function-point p3" cx="660" cy="108" r="5" />
+            <circle class="function-point p4" cx="846" cy="68" r="5" />
+          </svg>
         </div>
       </section>
 
@@ -106,67 +131,6 @@
             </div>
           </article>
         </div>
-      </section>
-
-      <section class="rhodes-section" id="rhodes" aria-labelledby="rhodes-title">
-        <div class="route-panel">
-          <div class="section-kicker">Rhodes notes</div>
-          <h2 id="rhodes-title">A destination made for late summer light.</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-            at ex porta, efficitur lacus in, pulvinar eros. Add ferry, flight,
-            transfer, and local tips here.
-          </p>
-        </div>
-        <div class="map-visual" aria-label="Decorative route from sea to Rhodes">
-          <span class="pin pin-a">A</span>
-          <span class="pin pin-e">E</span>
-          <svg viewBox="0 0 500 360" aria-hidden="true">
-            <path class="grid-line" d="M45 280 C155 110 315 330 455 85" />
-            <path class="route-line" d="M70 245 C165 190 220 105 304 145 S410 220 445 108" />
-            <circle cx="70" cy="245" r="5" />
-            <circle cx="304" cy="145" r="5" />
-            <circle cx="445" cy="108" r="5" />
-          </svg>
-        </div>
-      </section>
-
-      <section class="calendar-section" id="calendar" aria-labelledby="calendar-title">
-        <div>
-          <div class="section-kicker">Calendar</div>
-          <h2 id="calendar-title">Save the important moments.</h2>
-        </div>
-        <div class="calendar-actions" id="calendar-actions"></div>
-      </section>
-
-      <section class="photo-section" id="photos" aria-labelledby="photos-title">
-        <div class="photo-copy">
-          <div class="section-kicker">Shared memories</div>
-          <h2 id="photos-title">Upload photos from the wedding.</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Guests can
-            share their favorite photos here once storage is connected.
-          </p>
-          <p class="data-note">
-            Photo uploads need external storage such as Cloudinary, Uploadcare,
-            Supabase Storage, Google Drive, or a custom backend.
-          </p>
-        </div>
-
-        <form class="photo-form" id="photo-form">
-          <label>
-            Your name
-            <input name="photoName" autocomplete="name" placeholder="Your name" />
-          </label>
-          <label class="upload-drop">
-            <input id="photo-files" name="photos" type="file" accept="image/*" multiple />
-            <span>Choose photos</span>
-            <small>JPG, PNG, or HEIC. Up to 8 MB each.</small>
-          </label>
-          <div class="photo-preview" id="photo-preview" aria-live="polite"></div>
-          <button class="button primary form-button" type="submit">Upload photos</button>
-          <p class="form-status" id="photo-status" role="status" aria-live="polite"></p>
-        </form>
       </section>
 
       <section class="rsvp-section" id="rsvp" aria-labelledby="rsvp-title">

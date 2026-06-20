@@ -1,133 +1,16 @@
 const CONFIG = {
   rsvpEndpoint: "",
-  photoUploadEndpoint: "",
-  maxPhotoUploadMb: 8,
   couple: "Antonis & Eirini",
-  timezone: "Europe/Athens",
-  events: [
-    {
-      id: "ceremony",
-      title: "Antonis & Eirini - Wedding Ceremony",
-      location: "Rhodes, Greece",
-      start: "2026-09-27T17:30:00+03:00",
-      end: "2026-09-27T18:30:00+03:00",
-      description: "Wedding ceremony for Antonis and Eirini in Rhodes, Greece.",
-    },
-    {
-      id: "celebration",
-      title: "Antonis & Eirini - Wedding Celebration",
-      location: "Rhodes, Greece",
-      start: "2026-09-27T20:00:00+03:00",
-      end: "2026-09-28T02:00:00+03:00",
-      description: "Wedding celebration for Antonis and Eirini in Rhodes, Greece.",
-    },
-  ],
 };
 
 const header = document.querySelector(".site-header");
 const form = document.querySelector("#rsvp-form");
 const statusEl = document.querySelector("#form-status");
-const calendarActions = document.querySelector("#calendar-actions");
 const canvas = document.querySelector("#constellation");
 const ctx = canvas.getContext("2d");
-const photoForm = document.querySelector("#photo-form");
-const photoFiles = document.querySelector("#photo-files");
-const photoPreview = document.querySelector("#photo-preview");
-const photoStatus = document.querySelector("#photo-status");
 
 function setHeaderState() {
   header.classList.toggle("is-scrolled", window.scrollY > 24);
-}
-
-function pad(value) {
-  return String(value).padStart(2, "0");
-}
-
-function toCalendarStamp(value) {
-  const date = new Date(value);
-  return (
-    date.getUTCFullYear() +
-    pad(date.getUTCMonth() + 1) +
-    pad(date.getUTCDate()) +
-    "T" +
-    pad(date.getUTCHours()) +
-    pad(date.getUTCMinutes()) +
-    pad(date.getUTCSeconds()) +
-    "Z"
-  );
-}
-
-function googleCalendarUrl(event) {
-  const params = new URLSearchParams({
-    action: "TEMPLATE",
-    text: event.title,
-    dates: `${toCalendarStamp(event.start)}/${toCalendarStamp(event.end)}`,
-    details: event.description,
-    location: event.location,
-    ctz: CONFIG.timezone,
-  });
-
-  return `https://calendar.google.com/calendar/render?${params.toString()}`;
-}
-
-function icsContent(events) {
-  const lines = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//Antonis Eirini Wedding//Invitation//EN",
-    "CALSCALE:GREGORIAN",
-    "METHOD:PUBLISH",
-  ];
-
-  events.forEach((event) => {
-    lines.push(
-      "BEGIN:VEVENT",
-      `UID:${event.id}-antonis-eirini-20260927@antoniseirini.gr`,
-      `DTSTAMP:${toCalendarStamp(new Date().toISOString())}`,
-      `DTSTART:${toCalendarStamp(event.start)}`,
-      `DTEND:${toCalendarStamp(event.end)}`,
-      `SUMMARY:${event.title}`,
-      `DESCRIPTION:${event.description}`,
-      `LOCATION:${event.location}`,
-      "END:VEVENT",
-    );
-  });
-
-  lines.push("END:VCALENDAR");
-  return lines.join("\r\n");
-}
-
-function downloadIcs(events) {
-  const blob = new Blob([icsContent(events)], {
-    type: "text/calendar;charset=utf-8",
-  });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "antonis-eirini-wedding.ics";
-  document.body.append(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
-}
-
-function renderCalendarActions() {
-  CONFIG.events.forEach((event) => {
-    const link = document.createElement("a");
-    link.className = "button";
-    link.href = googleCalendarUrl(event);
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.textContent = `Google: ${event.id}`;
-    calendarActions.append(link);
-  });
-
-  const icsButton = document.createElement("button");
-  icsButton.className = "button primary";
-  icsButton.type = "button";
-  icsButton.textContent = "Download .ics";
-  icsButton.addEventListener("click", () => downloadIcs(CONFIG.events));
-  calendarActions.append(icsButton);
 }
 
 async function submitRsvp(event) {
@@ -181,69 +64,6 @@ async function submitRsvp(event) {
     console.error(error);
     statusEl.textContent =
       "The RSVP could not be sent. Please try again or contact the couple directly.";
-  }
-}
-
-function renderPhotoPreview() {
-  photoPreview.innerHTML = "";
-  photoStatus.textContent = "";
-
-  Array.from(photoFiles.files).slice(0, 9).forEach((file) => {
-    const image = document.createElement("img");
-    image.src = URL.createObjectURL(file);
-    image.alt = file.name;
-    image.addEventListener("load", () => URL.revokeObjectURL(image.src), {
-      once: true,
-    });
-    photoPreview.append(image);
-  });
-}
-
-async function submitPhotos(event) {
-  event.preventDefault();
-
-  const files = Array.from(photoFiles.files);
-  if (!files.length) {
-    photoStatus.textContent = "Choose at least one photo first.";
-    return;
-  }
-
-  const maxBytes = CONFIG.maxPhotoUploadMb * 1024 * 1024;
-  const oversized = files.find((file) => file.size > maxBytes);
-  if (oversized) {
-    photoStatus.textContent = `${oversized.name} is larger than ${CONFIG.maxPhotoUploadMb} MB.`;
-    return;
-  }
-
-  if (!CONFIG.photoUploadEndpoint) {
-    photoStatus.textContent =
-      "Photo storage is not connected yet. The previews work; add the upload endpoint in script.js.";
-    return;
-  }
-
-  const data = new FormData(photoForm);
-  data.append("submittedAt", new Date().toISOString());
-  data.append("source", window.location.href);
-
-  photoStatus.textContent = "Uploading...";
-
-  try {
-    const response = await fetch(CONFIG.photoUploadEndpoint, {
-      method: "POST",
-      body: data,
-    });
-
-    if (!response.ok) {
-      throw new Error(`Photo upload failed with status ${response.status}`);
-    }
-
-    photoForm.reset();
-    photoPreview.innerHTML = "";
-    photoStatus.textContent = "Thank you. Your photos have been uploaded.";
-  } catch (error) {
-    console.error(error);
-    photoStatus.textContent =
-      "The photos could not be uploaded. Please try again later.";
   }
 }
 
@@ -322,10 +142,7 @@ function drawConstellation(time = 0) {
 window.addEventListener("scroll", setHeaderState, { passive: true });
 window.addEventListener("resize", resizeCanvas);
 form.addEventListener("submit", submitRsvp);
-photoFiles.addEventListener("change", renderPhotoPreview);
-photoForm.addEventListener("submit", submitPhotos);
 
 setHeaderState();
-renderCalendarActions();
 resizeCanvas();
 requestAnimationFrame(drawConstellation);
