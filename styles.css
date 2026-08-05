@@ -2231,6 +2231,435 @@ footer small {
   .invite-stage::after { top: calc(60% + 180px); }
 }
 
+/* Unified envelope opening sequence */
+.paper-invite {
+  --invitation-width: min(430px, 74vw);
+  --envelope-width: min(520px, 96%);
+  width: min(570px, 94vw);
+  height: min(760px, 96svh);
+  perspective: 1800px;
+  cursor: default;
+}
+
+.invite-stage {
+  position: absolute;
+  inset: 0;
+  perspective: 1800px;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.invite-stage::after {
+  display: none;
+}
+
+.invite-folder,
+.folder-pocket {
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  width: var(--envelope-width);
+  height: auto;
+  aspect-ratio: 2 / 1;
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+}
+
+.invite-folder {
+  z-index: 1;
+  filter: drop-shadow(0 26px 28px rgba(75, 73, 60, 0.17));
+}
+
+.folder-back {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border: 1px solid rgba(137, 145, 127, 0.23);
+  border-radius: 6px 6px 12px 12px;
+  background: linear-gradient(155deg, #fffefb, #e9e5d9);
+}
+
+.folder-back::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 35%;
+  background:
+    linear-gradient(rgba(251, 250, 246, 0.55), rgba(251, 250, 246, 0.88)),
+    url("assets/wedding-invitation-template.jpg") left 5% / 100% auto no-repeat;
+  opacity: 0.62;
+}
+
+.folder-flap {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 68%;
+  border: 0;
+  background:
+    linear-gradient(rgba(251, 250, 246, 0.76), rgba(237, 233, 222, 0.92)),
+    url("assets/wedding-invitation-template.jpg") left 4% / 112% auto no-repeat;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform: rotateX(0deg);
+  transform-origin: top center;
+  backface-visibility: visible;
+  will-change: transform;
+}
+
+.folder-pocket {
+  z-index: 3;
+  overflow: hidden;
+  border: 1px solid rgba(137, 145, 127, 0.2);
+  border-radius: 5px 5px 12px 12px;
+  background: linear-gradient(158deg, rgba(250, 248, 241, 0.98), rgba(228, 224, 211, 0.98));
+  box-shadow: 0 20px 38px rgba(75, 73, 60, 0.12);
+}
+
+.folder-pocket::before,
+.folder-pocket::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: none;
+}
+
+.folder-pocket::before {
+  z-index: 1;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.74), rgba(137, 145, 127, 0.08));
+  clip-path: polygon(0 0, 52% 59%, 0 100%);
+}
+
+.folder-pocket::after {
+  z-index: 1;
+  background: linear-gradient(225deg, rgba(255, 255, 255, 0.7), rgba(201, 168, 101, 0.08));
+  clip-path: polygon(100% 0, 48% 59%, 100% 100%);
+}
+
+.folder-pocket span {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 15%;
+  left: 0;
+  color: var(--sage-deep);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+.invite-motion {
+  position: absolute;
+  z-index: 2;
+  top: 58%;
+  left: 50%;
+  width: var(--invitation-width);
+  aspect-ratio: 1656 / 2247;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.42) rotate(0deg);
+  transform-origin: center center;
+  clip-path: inset(0 0 60% 0);
+  will-change: transform, opacity;
+}
+
+.invite-card-3d {
+  position: absolute;
+  inset: 0;
+  transform: none;
+  transform-style: preserve-3d;
+  transition: transform 0.82s cubic-bezier(0.2, 0.72, 0.2, 1);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.invite-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  pointer-events: none;
+}
+
+.invite-face {
+  overflow: hidden;
+  border: 1px solid rgba(137, 145, 127, 0.24);
+  border-radius: 3px;
+  background: #fff;
+  box-shadow: 0 34px 78px rgba(63, 67, 55, 0.22);
+}
+
+.invite-front img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.invite-front {
+  transform: rotateY(0deg);
+}
+
+.invite-back {
+  isolation: isolate;
+  display: grid;
+  place-content: center;
+  gap: 15px;
+  padding: 46px;
+  color: var(--sage-deep);
+  text-align: center;
+  transform: rotateY(180deg);
+}
+
+.invite-back::before,
+.invite-back::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 56%;
+  height: 34%;
+  background: url("assets/wedding-invitation-template.jpg") left top / 270% auto no-repeat;
+  opacity: 0.5;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse at top left, #000 0 42%, rgba(0, 0, 0, 0.7) 62%, transparent 100%);
+  mask-image: radial-gradient(ellipse at top left, #000 0 42%, rgba(0, 0, 0, 0.7) 62%, transparent 100%);
+}
+
+.invite-back::before {
+  top: 0;
+  left: 0;
+}
+
+.invite-back::after {
+  right: 0;
+  bottom: 0;
+  transform: rotate(180deg);
+}
+
+.invite-back span,
+.invite-back small {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.invite-back strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3.5rem, 6vw, 4.8rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.invite-back strong i {
+  color: var(--gold);
+  font-size: 0.72em;
+  font-weight: 400;
+}
+
+.paper-invite.is-flipped .invite-card-3d {
+  transform: rotateY(180deg);
+}
+
+.paper-invite.is-replaying,
+.paper-invite.is-replaying .invite-card-3d {
+  animation: none;
+}
+
+.paper-invite.is-replaying .folder-flap {
+  animation: unified-flap-open 1.05s 0.48s cubic-bezier(0.2, 0.72, 0.18, 1) both;
+}
+
+.paper-invite.is-replaying .invite-motion {
+  animation:
+    invitation-release 2.3s 1.15s cubic-bezier(0.16, 0.86, 0.22, 1) both,
+    invitation-float 5.8s 3.5s ease-in-out infinite;
+}
+
+.paper-invite.is-replaying .invite-folder,
+.paper-invite.is-replaying .folder-pocket {
+  animation: unified-envelope-leave 0.82s 2.66s cubic-bezier(0.3, 0.65, 0.3, 1) both;
+}
+
+.paper-invite.is-ready .invite-motion {
+  top: 50%;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  clip-path: inset(0);
+}
+
+.paper-invite.is-ready .invite-card-3d,
+.paper-invite.is-replaying.is-ready .invite-card-3d {
+  animation: none;
+  transform: none;
+  transition: transform 0.82s cubic-bezier(0.2, 0.72, 0.2, 1);
+}
+
+.paper-invite.is-ready.is-flipped .invite-card-3d,
+.paper-invite.is-replaying.is-ready.is-flipped .invite-card-3d {
+  transform: rotateY(180deg);
+}
+
+.paper-invite.is-ready .invite-folder,
+.paper-invite.is-ready .folder-pocket {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, calc(-50% + 44px)) scale(0.96);
+}
+
+.invite-controls {
+  position: absolute;
+  z-index: 7;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+}
+
+.paper-invite.is-ready .invite-controls {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.invite-controls button {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(111, 121, 104, 0.38);
+  border-radius: 50%;
+  background: rgba(251, 250, 246, 0.86);
+  color: var(--sage-deep);
+  font: inherit;
+  font-size: 1.15rem;
+  line-height: 1;
+  opacity: 0.72;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: background 180ms ease, border-color 180ms ease, opacity 180ms ease, transform 180ms ease;
+}
+
+.invite-controls button:hover {
+  border-color: var(--sage-deep);
+  background: #fff;
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.invite-controls button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.invite-stage:focus-visible {
+  outline: none;
+}
+
+.invite-stage:focus-visible .invite-face {
+  box-shadow:
+    0 0 0 2px var(--gold),
+    0 34px 78px rgba(63, 67, 55, 0.22);
+}
+
+@keyframes unified-flap-open {
+  0% { transform: rotateX(0deg); filter: brightness(1); }
+  46% { transform: rotateX(96deg); filter: brightness(0.96); }
+  100% { transform: rotateX(178deg); filter: brightness(0.92); }
+}
+
+@keyframes invitation-release {
+  0% {
+    top: 58%;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.42) rotate(0deg);
+    clip-path: inset(0 0 60% 0);
+  }
+  10% {
+    opacity: 1;
+    clip-path: inset(0 0 56% 0);
+  }
+  36% {
+    top: 41%;
+    transform: translate(-50%, -50%) scale(0.68) rotate(-1.2deg);
+    clip-path: inset(0 0 40% 0);
+  }
+  72% {
+    top: 48.5%;
+    transform: translate(-50%, -50%) scale(1.015) rotate(0.35deg);
+    clip-path: inset(0 0 18% 0);
+  }
+  88% {
+    clip-path: inset(0 0 8% 0);
+  }
+  100% {
+    top: 50%;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    clip-path: inset(0);
+  }
+}
+
+@keyframes unified-envelope-leave {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 44px)) scale(0.96);
+  }
+}
+
+@keyframes invitation-float {
+  0%, 100% { top: 50%; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  50% { top: 50%; transform: translate(-50%, calc(-50% - 6px)) scale(1) rotate(0.18deg); }
+}
+
+@media (max-width: 700px) {
+  .paper-invite {
+    --invitation-width: min(310px, 80vw);
+    --envelope-width: min(350px, 94vw);
+    width: min(360px, 96vw);
+    height: min(590px, 94svh);
+  }
+
+  .folder-pocket span {
+    font-size: 0.95rem;
+  }
+
+  .invite-controls button {
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    font-size: 1.12rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paper-invite .invite-motion {
+    top: 50%;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .paper-invite .invite-folder,
+  .paper-invite .folder-pocket {
+    display: none;
+  }
+}
+
 /* Wedding-day typography and spacing */
 .day-section #day-title {
   max-width: 100%;

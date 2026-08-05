@@ -15,7 +15,9 @@ const modalTitle = document.querySelector("#modal-title");
 const modalIntro = document.querySelector("#modal-intro");
 const attendanceField = document.querySelector("#attendance-field");
 const attendanceFields = document.querySelector("#attendance-fields");
-const replayInvite = document.querySelector("#replay-invite");
+const invite = document.querySelector(".paper-invite");
+const inviteStage = document.querySelector(".invite-stage");
+const flipInvite = document.querySelector("#flip-invite");
 const photoForm = document.querySelector("#photo-form");
 const photoFiles = document.querySelector("#photo-files");
 const photoPreview = document.querySelector("#photo-preview");
@@ -25,21 +27,20 @@ function setHeaderState() {
   header.classList.toggle("is-scrolled", window.scrollY > window.innerHeight * 0.82);
 }
 
-function replayInvitation() {
-  const invite = document.querySelector(".paper-invite");
-  invite.classList.remove("is-ready", "show-cover");
-  invite.classList.remove("is-replaying");
-  void invite.offsetWidth;
-  invite.classList.add("is-replaying");
-}
-
-function turnInvitation() {
-  const invite = document.querySelector(".paper-invite");
-  if (!invite.classList.contains("is-ready")) {
-    invite.classList.add("is-ready");
-    return;
-  }
-  invite.classList.toggle("show-cover");
+function flipInvitation() {
+  if (!invite.classList.contains("is-ready")) return;
+  const isFlipped = invite.classList.toggle("is-flipped");
+  flipInvite.setAttribute(
+    "aria-label",
+    isFlipped ? "Προβολή της μπροστινής όψης" : "Προβολή της άλλης όψης",
+  );
+  flipInvite.setAttribute("title", isFlipped ? "Μπροστινή όψη" : "Άλλη όψη");
+  inviteStage.setAttribute(
+    "aria-label",
+    isFlipped
+      ? "Προβολή της μπροστινής όψης του προσκλητηρίου"
+      : "Προβολή της άλλης όψης του προσκλητηρίου",
+  );
 }
 
 function openRsvpModal(attendance) {
@@ -278,22 +279,22 @@ window.addEventListener("resize", resizeCanvas);
 form.addEventListener("submit", submitRsvp);
 photoFiles.addEventListener("change", renderPhotoPreview);
 photoForm.addEventListener("submit", submitPhotos);
-replayInvite?.addEventListener("click", replayInvitation);
-document.querySelector(".paper-invite").addEventListener("click", turnInvitation);
-document.querySelector(".paper-invite").addEventListener("keydown", (event) => {
+inviteStage.addEventListener("click", flipInvitation);
+inviteStage.addEventListener("keydown", (event) => {
   if (event.key === "Enter" || event.key === " ") {
     event.preventDefault();
-    turnInvitation();
+    flipInvitation();
   }
 });
-document.querySelector(".invite-card-3d").addEventListener("animationend", (event) => {
-  if (event.animationName === "card-reveal") {
-    document.querySelector(".paper-invite").classList.add("is-ready");
+flipInvite.addEventListener("click", flipInvitation);
+document.querySelector(".invite-motion").addEventListener("animationend", (event) => {
+  if (event.animationName === "invitation-release") {
+    invite.classList.add("is-ready");
   }
 });
 window.setTimeout(() => {
-  document.querySelector(".paper-invite").classList.add("is-ready");
-}, 4400);
+  invite.classList.add("is-ready");
+}, 3900);
 document.querySelectorAll("[data-rsvp-open]").forEach((button) => {
   button.addEventListener("click", () => openRsvpModal(button.dataset.rsvpOpen));
 });
