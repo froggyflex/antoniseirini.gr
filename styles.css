@@ -1384,3 +1384,881 @@ footer p {
     scroll-behavior: auto !important;
   }
 }
+
+/* Invitation-first layout */
+.hero {
+  min-height: 112svh;
+  padding-top: 116px;
+  padding-bottom: 100px;
+}
+
+.hero-shade {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(231, 161, 138, 0.18), transparent 26%),
+    radial-gradient(circle at 88% 78%, rgba(183, 168, 207, 0.16), transparent 28%),
+    linear-gradient(180deg, rgba(251, 250, 246, 0.86), rgba(241, 238, 229, 0.94));
+}
+
+.hero-content {
+  width: min(1280px, 100%);
+  grid-template-columns: minmax(260px, 0.72fr) minmax(410px, 0.95fr) minmax(260px, 0.72fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: center;
+}
+
+.hero-content .hero-meta {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  justify-self: center;
+  margin: 0 0 10px;
+}
+
+.paper-invite {
+  grid-column: 2;
+  grid-row: 2;
+  position: relative;
+  width: min(450px, 100%);
+  height: min(610px, 72vw);
+  cursor: pointer;
+  perspective: 1500px;
+  outline: none;
+}
+
+.paper-invite:focus-visible .invite-card-3d {
+  outline: 2px solid var(--gold);
+  outline-offset: 8px;
+}
+
+.invite-card-3d {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: translateY(150px) rotateY(0deg) scale(0.88);
+  will-change: transform;
+}
+
+.paper-invite.is-replaying .invite-card-3d {
+  animation:
+    invitation-rise 2.7s cubic-bezier(0.16, 0.84, 0.24, 1) forwards,
+    invitation-flip 0.85s 2.75s cubic-bezier(0.2, 0.72, 0.22, 1) forwards,
+    invitation-float 5.8s 3.7s ease-in-out infinite;
+}
+
+.paper-invite.is-turned .invite-card-3d,
+.paper-invite.is-replaying.is-turned .invite-card-3d {
+  animation: none;
+  transform: translateY(0) rotateY(0deg) scale(1);
+  transition: transform 0.85s cubic-bezier(0.2, 0.72, 0.22, 1);
+}
+
+.paper-invite:not(.is-replaying):not(.is-turned) .invite-card-3d {
+  transform: translateY(0) rotateY(180deg) scale(1);
+  transition: transform 0.85s cubic-bezier(0.2, 0.72, 0.22, 1);
+}
+
+.invite-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border: 1px solid rgba(137, 145, 127, 0.28);
+  border-radius: 3px;
+  background: #fff;
+  box-shadow: 0 38px 90px rgba(63, 67, 55, 0.22);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.invite-front {
+  transform: rotateY(180deg);
+}
+
+.invite-front img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.invite-cover {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 22px;
+  padding: 42px;
+  color: var(--sage-deep);
+  text-align: center;
+  background:
+    linear-gradient(rgba(251, 250, 246, 0.82), rgba(251, 250, 246, 0.9)),
+    url("assets/wedding-invitation-template.jpg") left center / cover no-repeat;
+}
+
+.invite-cover::before,
+.invite-cover::after {
+  content: "";
+  width: 56px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.cover-kicker,
+.cover-date,
+.invite-cover small {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.invite-cover strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(4.8rem, 8vw, 7.2rem);
+  font-weight: 400;
+  letter-spacing: -0.08em;
+  line-height: 1;
+}
+
+.invite-cover strong i {
+  display: block;
+  margin: 10px 0;
+  color: var(--gold);
+  font-size: 0.42em;
+  font-weight: 400;
+}
+
+.invite-hint {
+  position: absolute;
+  right: 0;
+  bottom: -34px;
+  left: 0;
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-align: center;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: hint-reveal 0.7s 3.7s ease forwards;
+}
+
+.hero-text {
+  grid-column: 3;
+  grid-row: 2;
+  align-self: center;
+  max-width: 360px;
+}
+
+.hero-content .hero-text h1,
+.hero-content .hero-text .hero-copy,
+.hero-content .hero-text .hero-actions {
+  grid-column: auto;
+}
+
+.hero-ornament {
+  display: block;
+  margin-bottom: 18px;
+  color: var(--gold);
+  font-size: 1rem;
+}
+
+.hero-text h1 {
+  margin: 0 0 22px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3rem, 5.3vw, 5.8rem);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 0.92;
+}
+
+.hero-text h1 i {
+  display: block;
+  margin: 8px 0;
+  color: var(--sage);
+  font-size: 0.55em;
+  font-weight: 400;
+}
+
+.hero-copy {
+  max-width: 32ch;
+  margin-bottom: 30px;
+  color: #676b5f;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.08rem, 1.55vw, 1.3rem);
+  line-height: 1.75;
+}
+
+.hero-actions {
+  flex-wrap: wrap;
+}
+
+.hero-actions .button {
+  min-width: 150px;
+}
+
+.day-lead {
+  max-width: 650px;
+  margin: -22px 0 52px;
+  color: var(--muted);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.1rem;
+  line-height: 1.75;
+}
+
+.text-link {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--sage-deep);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+footer small {
+  display: block;
+  margin-top: 8px;
+  color: rgba(251, 250, 246, 0.68);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 1040px) {
+  .hero {
+    min-height: 100svh;
+  }
+
+  .hero-content {
+    grid-template-columns: minmax(380px, 0.95fr) minmax(260px, 0.65fr);
+  }
+
+  .paper-invite {
+    grid-column: 1;
+  }
+
+  .hero-text {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 820px) {
+  .site-header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+
+  nav a:nth-child(2),
+  nav a:nth-child(4) {
+    display: none;
+  }
+
+  .hero {
+    min-height: auto;
+    padding-top: 96px;
+  }
+
+  .hero-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .hero-content .hero-meta,
+  .paper-invite,
+  .hero-text {
+    grid-column: 1;
+  }
+
+  .hero-content .hero-meta {
+    grid-row: 1;
+  }
+
+  .paper-invite {
+    grid-row: 2;
+    width: min(430px, 90vw);
+    height: min(590px, 122vw);
+    margin-bottom: 4px;
+  }
+
+  .hero-text {
+    grid-row: 3;
+    justify-self: center;
+    max-width: 520px;
+  }
+
+  .hero-ornament {
+    margin-top: 10px;
+  }
+
+  .hero-copy {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .hero-text h1 i {
+    display: inline;
+    margin: 0 0.12em;
+  }
+}
+
+@media (max-width: 520px) {
+  .site-header nav {
+    gap: 12px;
+  }
+
+  .site-header nav a:nth-child(1) {
+    display: none;
+  }
+
+  .hero {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .hero-content .hero-meta {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+
+  .paper-invite {
+    width: min(315px, 84vw);
+    height: min(430px, 115vw);
+  }
+
+  .hero-text h1 {
+    font-size: clamp(2.6rem, 13vw, 4rem);
+  }
+
+  .day-lead {
+    margin-top: -10px;
+    margin-bottom: 38px;
+  }
+}
+
+@keyframes invitation-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(170px) rotateY(0deg) scale(0.82);
+  }
+  24% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateY(0deg) scale(1);
+  }
+}
+
+@keyframes invitation-flip {
+  from { transform: translateY(0) rotateY(0deg) scale(1); }
+  to { transform: translateY(0) rotateY(180deg) scale(1); }
+}
+
+@keyframes invitation-float {
+  0%, 100% { transform: translateY(0) rotateY(180deg) rotateZ(0deg) scale(1); }
+  50% { transform: translateY(-9px) rotateY(180deg) rotateZ(0.25deg) scale(1); }
+}
+
+@keyframes hint-reveal {
+  to { opacity: 0.82; }
+}
+
+/* Refined invitation reveal: folder, card emergence, then a clean 3D turn. */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.site-header {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-100%);
+  transition:
+    opacity 320ms ease,
+    transform 320ms ease,
+    background 240ms ease,
+    box-shadow 240ms ease;
+}
+
+.site-header.is-scrolled {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.hero {
+  min-height: 100svh;
+  padding: 20px;
+  background: #f7f4ec;
+}
+
+.hero-shade {
+  background:
+    radial-gradient(circle at 18% 20%, rgba(231, 161, 138, 0.1), transparent 24%),
+    radial-gradient(circle at 84% 82%, rgba(183, 168, 207, 0.1), transparent 26%),
+    linear-gradient(180deg, #fbfaf6, #f2eee4);
+}
+
+.hero-content {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 1fr;
+  place-items: center;
+  text-align: center;
+}
+
+.paper-invite {
+  grid-column: 1;
+  grid-row: 1;
+  width: min(470px, 92vw);
+  height: min(680px, 94svh);
+  margin: 0;
+  perspective: 1600px;
+}
+
+.invite-stage {
+  position: absolute;
+  inset: 0;
+  perspective: 1600px;
+}
+
+.invite-stage::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: calc(60% + 235px);
+  bottom: -160px;
+  left: 50%;
+  width: min(640px, 110vw);
+  background: #f2eee4;
+  transform: translateX(-50%);
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 13%, #000 87%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 13%, #000 87%, transparent);
+}
+
+.invite-folder {
+  position: absolute;
+  z-index: 1;
+  top: 60%;
+  left: 50%;
+  width: min(440px, 96%);
+  height: 220px;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 28px 28px rgba(75, 73, 60, 0.16));
+}
+
+.folder-back {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(137, 145, 127, 0.2);
+  border-radius: 5px 5px 10px 10px;
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.95), rgba(232, 228, 215, 0.94)),
+    var(--paper);
+}
+
+.folder-flap {
+  position: absolute;
+  z-index: -1;
+  top: -150px;
+  left: 0;
+  width: 100%;
+  height: 160px;
+  border: 1px solid rgba(137, 145, 127, 0.16);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(239, 235, 224, 0.96)),
+    var(--paper);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  transform-origin: bottom center;
+  transform: rotateX(178deg);
+}
+
+.folder-pocket {
+  position: absolute;
+  z-index: 3;
+  top: calc(60% + 30px);
+  left: 50%;
+  width: min(440px, 96%);
+  height: 190px;
+  overflow: hidden;
+  border: 1px solid rgba(137, 145, 127, 0.18);
+  border-radius: 2px 2px 10px 10px;
+  background:
+    linear-gradient(148deg, rgba(249, 247, 240, 0.97), rgba(228, 224, 210, 0.96)),
+    var(--paper);
+  box-shadow: 0 22px 45px rgba(75, 73, 60, 0.14);
+  transform: translateX(-50%);
+}
+
+.folder-pocket::before,
+.folder-pocket::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(137, 145, 127, 0.055);
+}
+
+.folder-pocket::before { clip-path: polygon(0 0, 51% 58%, 0 100%); }
+.folder-pocket::after { clip-path: polygon(100% 0, 49% 58%, 100% 100%); }
+
+.folder-pocket span {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 34px;
+  left: 0;
+  color: var(--sage-deep);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.invite-motion {
+  position: absolute;
+  z-index: 1;
+  top: 56%;
+  left: 50%;
+  width: min(360px, 78vw);
+  aspect-ratio: 1656 / 2247;
+  transform: translate(-50%, 0) scale(0.92);
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.invite-card-3d {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(0deg);
+  transform-style: preserve-3d;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.invite-face {
+  box-shadow: 0 32px 76px rgba(63, 67, 55, 0.24);
+  pointer-events: none;
+}
+
+.paper-invite.is-replaying .invite-motion {
+  animation: card-emerge 2.75s cubic-bezier(0.16, 0.84, 0.22, 1) forwards;
+}
+
+.paper-invite.is-replaying .invite-card-3d {
+  animation: card-reveal 0.9s 2.82s cubic-bezier(0.2, 0.72, 0.2, 1) forwards;
+}
+
+.paper-invite.is-replaying .invite-folder,
+.paper-invite.is-replaying .folder-pocket {
+  animation: folder-depart 0.9s 2.62s ease forwards;
+}
+
+.paper-invite.is-ready .invite-motion {
+  top: 50%;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  animation: none;
+}
+
+.paper-invite.is-ready .invite-card-3d {
+  transform: rotateY(180deg);
+  animation: none;
+  transition: transform 0.85s cubic-bezier(0.2, 0.72, 0.2, 1);
+}
+
+.paper-invite.is-ready.show-cover .invite-card-3d {
+  transform: rotateY(0deg);
+}
+
+.paper-invite.is-ready .invite-folder,
+.paper-invite.is-ready .folder-pocket {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 56px) scale(0.96);
+  animation: none;
+}
+
+.paper-invite.is-ready .invite-folder {
+  transform: translate(-50%, 56px) scale(0.96);
+}
+
+.invite-hint,
+.hero-meta,
+.hero-text,
+.scroll-cue,
+.hero-bg,
+#constellation {
+  display: none !important;
+}
+
+@keyframes card-emerge {
+  0% {
+    opacity: 0;
+    top: 56%;
+    transform: translate(-50%, 30px) scale(0.9);
+  }
+  18% { opacity: 1; }
+  100% {
+    opacity: 1;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes card-reveal {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(180deg); }
+}
+
+@keyframes folder-depart {
+  from { opacity: 1; }
+  to { opacity: 0; transform: translate(-50%, 56px) scale(0.96); }
+}
+
+@media (max-width: 520px) {
+  .hero { padding: 8px; }
+
+  .paper-invite {
+    width: min(350px, 96vw);
+    height: min(570px, 96svh);
+  }
+
+  .invite-motion { width: min(300px, 80vw); }
+
+  .invite-folder,
+  .folder-pocket { width: min(340px, 94vw); }
+
+  .invite-folder { height: 180px; }
+  .folder-pocket { height: 156px; }
+  .folder-flap { top: -116px; height: 126px; }
+  .folder-pocket span { bottom: 24px; font-size: 1rem; }
+}
+
+/* Final invitation treatment */
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  width: min(23vw, 300px);
+  background: url("assets/wedding-invitation-template.jpg") left center / auto 155% no-repeat;
+  opacity: 0.23;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, #000 10%, rgba(0, 0, 0, 0.55) 52%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 10%, rgba(0, 0, 0, 0.55) 52%, transparent 100%);
+}
+
+.hero::before { left: 0; }
+.hero::after { right: 0; transform: scaleX(-1); }
+
+.paper-invite {
+  width: min(570px, 94vw);
+  height: min(760px, 96svh);
+}
+
+.invite-motion {
+  width: min(430px, 74vw);
+  opacity: 1;
+  clip-path: none;
+}
+
+.invite-folder,
+.folder-pocket {
+  width: min(520px, 96%);
+}
+
+.folder-flap {
+  display: none;
+}
+
+.folder-pocket {
+  height: 220px;
+  overflow: visible;
+  border-radius: 3px 3px 10px 10px;
+  background:
+    linear-gradient(154deg, rgba(251, 249, 242, 0.99), rgba(229, 225, 213, 0.98)),
+    var(--paper);
+}
+
+.folder-pocket::before {
+  z-index: 1;
+  background: linear-gradient(145deg, rgba(137, 145, 127, 0.025), rgba(201, 168, 101, 0.06));
+  clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
+}
+
+.folder-pocket::after {
+  z-index: 3;
+  background:
+    linear-gradient(170deg, rgba(255, 255, 255, 0.99), rgba(234, 230, 218, 0.99)),
+    var(--paper);
+  clip-path: polygon(0 0, 100% 0, 50% 82%);
+  transform: rotateX(0deg);
+  transform-origin: top center;
+  backface-visibility: hidden;
+}
+
+.folder-pocket span {
+  z-index: 4;
+  bottom: 34px;
+}
+
+.invite-cover {
+  isolation: isolate;
+  background: #fbfaf6;
+}
+
+.invite-cover::before,
+.invite-cover::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  width: 43%;
+  height: 100%;
+  background: url("assets/wedding-invitation-template.jpg") left center / auto 100% no-repeat;
+  opacity: 0.25;
+}
+
+.invite-cover::before { left: 0; }
+.invite-cover::after { right: 0; transform: scaleX(-1); }
+
+.invite-cover > * {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.paper-invite.is-replaying .invite-motion {
+  animation: card-emerge-real 2.45s 0.78s cubic-bezier(0.16, 0.84, 0.22, 1) both;
+}
+
+.paper-invite.is-replaying .invite-card-3d {
+  animation: card-reveal 0.92s 3.28s cubic-bezier(0.2, 0.72, 0.2, 1) forwards;
+}
+
+.paper-invite.is-replaying.is-ready .invite-card-3d {
+  animation: none;
+  transform: rotateY(180deg);
+  transition: transform 0.85s cubic-bezier(0.2, 0.72, 0.2, 1);
+}
+
+.paper-invite.is-replaying.is-ready.show-cover .invite-card-3d {
+  transform: rotateY(0deg);
+}
+
+.paper-invite.is-replaying .folder-pocket::after {
+  animation: envelope-flap-open 0.82s 0.12s cubic-bezier(0.25, 0.7, 0.2, 1) forwards;
+}
+
+.paper-invite.is-replaying .invite-folder,
+.paper-invite.is-replaying .folder-pocket {
+  animation: folder-depart 0.88s 3.06s ease forwards;
+}
+
+.paper-invite.is-replaying .invite-stage::after {
+  animation: lower-mask-depart 0.88s 3.06s ease forwards;
+}
+
+.paper-invite.is-ready .invite-motion {
+  clip-path: none;
+}
+
+.paper-invite.is-ready .invite-stage::after {
+  opacity: 0;
+}
+
+@keyframes envelope-flap-open {
+  0% { transform: rotateX(0deg); }
+  58% { transform: rotateX(104deg); }
+  100% { transform: rotateX(178deg); }
+}
+
+@keyframes card-emerge-real {
+  0% {
+    opacity: 1;
+    top: 56%;
+    transform: translate(-50%, 34px) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes lower-mask-depart {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@media (max-width: 700px) {
+  .hero::before,
+  .hero::after {
+    width: 30vw;
+    background-size: auto 165%;
+    opacity: 0.13;
+  }
+
+  .paper-invite {
+    width: min(360px, 96vw);
+    height: min(590px, 96svh);
+  }
+
+  .invite-motion { width: min(310px, 80vw); }
+
+  .invite-folder,
+  .folder-pocket { width: min(350px, 94vw); }
+
+  .folder-pocket { height: 165px; }
+  .folder-pocket span { bottom: 23px; font-size: 1rem; }
+  .invite-stage::after { top: calc(60% + 180px); }
+}
+
+/* Wedding-day typography and spacing */
+.day-section #day-title {
+  max-width: 100%;
+  font-size: clamp(2.75rem, 5.2vw, 5.2rem);
+  line-height: 1.06;
+  text-wrap: balance;
+}
+
+.day-section .day-lead {
+  max-width: 62ch;
+  margin: clamp(30px, 4vw, 50px) 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.05rem, 1.25vw, 1.2rem);
+  line-height: 1.8;
+}
+
+.day-section .timeline {
+  margin-top: clamp(44px, 5vw, 68px);
+}
+
+@media (max-width: 700px) {
+  .day-section #day-title {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+    line-height: 1.02;
+  }
+
+  .day-section .day-lead {
+    margin-top: 24px;
+    margin-bottom: 0;
+  }
+}

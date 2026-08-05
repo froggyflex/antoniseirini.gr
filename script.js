@@ -2,14 +2,14 @@ const CONFIG = {
   rsvpEndpoint: "",
   photoUploadEndpoint: "",
   maxPhotoUploadMb: 8,
-  couple: "Antonis & Eirini",
+  couple: "Αντώνης & Ειρήνη",
 };
 
 const header = document.querySelector(".site-header");
 const form = document.querySelector("#rsvp-form");
 const statusEl = document.querySelector("#form-status");
 const canvas = document.querySelector("#constellation");
-const ctx = canvas.getContext("2d");
+const ctx = canvas?.getContext("2d");
 const modal = document.querySelector("#rsvp-modal");
 const modalTitle = document.querySelector("#modal-title");
 const modalIntro = document.querySelector("#modal-intro");
@@ -22,23 +22,33 @@ const photoPreview = document.querySelector("#photo-preview");
 const photoStatus = document.querySelector("#photo-status");
 
 function setHeaderState() {
-  header.classList.toggle("is-scrolled", window.scrollY > 24);
+  header.classList.toggle("is-scrolled", window.scrollY > window.innerHeight * 0.82);
 }
 
 function replayInvitation() {
   const invite = document.querySelector(".paper-invite");
+  invite.classList.remove("is-ready", "show-cover");
   invite.classList.remove("is-replaying");
   void invite.offsetWidth;
   invite.classList.add("is-replaying");
 }
 
+function turnInvitation() {
+  const invite = document.querySelector(".paper-invite");
+  if (!invite.classList.contains("is-ready")) {
+    invite.classList.add("is-ready");
+    return;
+  }
+  invite.classList.toggle("show-cover");
+}
+
 function openRsvpModal(attendance) {
   const isAttending = attendance === "attending";
   attendanceField.value = attendance;
-  modalTitle.textContent = isAttending ? "We will attend" : "We cannot attend";
+  modalTitle.textContent = isAttending ? "Θα παρευρεθούμε" : "Δεν θα μπορέσουμε να παρευρεθούμε";
   modalIntro.textContent = isAttending
-    ? "Add the number of adults and children so the menu totals are clear."
-    : "Send a short reply so the guest list stays accurate.";
+    ? "Παρακαλούμε συμπληρώστε τον αριθμό ενηλίκων και παιδιών που θα παρευρεθούν."
+    : "Παρακαλούμε καταχωρίστε την απάντησή σας, ώστε να ενημερωθεί η λίστα των προσκεκλημένων.";
   attendanceFields.hidden = !isAttending;
   modal.classList.add("is-open");
   modal.setAttribute("aria-hidden", "false");
@@ -62,7 +72,7 @@ async function submitRsvp(event) {
   const totalGuests = adultMenus + kidMenus;
 
   if (attendance === "attending" && totalGuests < 1) {
-    statusEl.textContent = "Add at least one adult or kid menu.";
+    statusEl.textContent = "Προσθέστε τουλάχιστον έναν ενήλικα ή ένα παιδί.";
     return;
   }
 
@@ -80,12 +90,12 @@ async function submitRsvp(event) {
 
   if (!CONFIG.rsvpEndpoint) {
     statusEl.textContent =
-      "RSVP endpoint is not connected yet. Your form is ready; add the endpoint in script.js.";
+      "Η φόρμα είναι έτοιμη και θα ενεργοποιηθεί μόλις συνδεθεί η υπηρεσία επιβεβαίωσης.";
     console.info("RSVP preview payload:", payload);
     return;
   }
 
-  statusEl.textContent = "Sending...";
+  statusEl.textContent = "Αποστολή...";
 
   try {
     const body = new URLSearchParams({
@@ -111,12 +121,12 @@ async function submitRsvp(event) {
     }
 
     form.reset();
-    statusEl.textContent = "Thank you. Your RSVP has been sent.";
+    statusEl.textContent = "Ευχαριστούμε! Η απάντησή σας στάλθηκε.";
     setTimeout(closeRsvpModal, 900);
   } catch (error) {
     console.error(error);
     statusEl.textContent =
-      "The RSVP could not be sent. Please try again or contact the couple directly.";
+      "Η απάντηση δεν μπόρεσε να σταλεί. Δοκιμάστε ξανά ή επικοινωνήστε απευθείας μαζί μας.";
   }
 }
 
@@ -140,20 +150,20 @@ async function submitPhotos(event) {
 
   const files = Array.from(photoFiles.files);
   if (!files.length) {
-    photoStatus.textContent = "Choose at least one photo first.";
+    photoStatus.textContent = "Επιλέξτε πρώτα τουλάχιστον μία φωτογραφία.";
     return;
   }
 
   const maxBytes = CONFIG.maxPhotoUploadMb * 1024 * 1024;
   const oversized = files.find((file) => file.size > maxBytes);
   if (oversized) {
-    photoStatus.textContent = `${oversized.name} is larger than ${CONFIG.maxPhotoUploadMb} MB.`;
+    photoStatus.textContent = `Το αρχείο ${oversized.name} είναι μεγαλύτερο από ${CONFIG.maxPhotoUploadMb} MB.`;
     return;
   }
 
   if (!CONFIG.photoUploadEndpoint) {
     photoStatus.textContent =
-      "Photo storage is not connected yet. The previews work; add the upload endpoint in script.js.";
+      "Η αποστολή φωτογραφιών θα ενεργοποιηθεί πριν από τον γάμο.";
     return;
   }
 
@@ -161,7 +171,7 @@ async function submitPhotos(event) {
   data.append("submittedAt", new Date().toISOString());
   data.append("source", window.location.href);
 
-  photoStatus.textContent = "Uploading...";
+  photoStatus.textContent = "Μεταφόρτωση...";
 
   try {
     const response = await fetch(CONFIG.photoUploadEndpoint, {
@@ -175,15 +185,16 @@ async function submitPhotos(event) {
 
     photoForm.reset();
     photoPreview.innerHTML = "";
-    photoStatus.textContent = "Thank you. Your photos have been uploaded.";
+    photoStatus.textContent = "Ευχαριστούμε! Οι φωτογραφίες σας ανέβηκαν.";
   } catch (error) {
     console.error(error);
     photoStatus.textContent =
-      "The photos could not be uploaded. Please try again later.";
+      "Οι φωτογραφίες δεν μπόρεσαν να ανέβουν. Δοκιμάστε ξανά αργότερα.";
   }
 }
 
 function resizeCanvas() {
+  if (!canvas || !ctx) return;
   const ratio = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width = Math.floor(canvas.offsetWidth * ratio);
   canvas.height = Math.floor(canvas.offsetHeight * ratio);
@@ -191,6 +202,7 @@ function resizeCanvas() {
 }
 
 function drawConstellation(time = 0) {
+  if (!canvas || !ctx) return;
   const width = canvas.offsetWidth;
   const height = canvas.offsetHeight;
   const progress = (Math.sin(time / 1500) + 1) / 2;
@@ -266,7 +278,22 @@ window.addEventListener("resize", resizeCanvas);
 form.addEventListener("submit", submitRsvp);
 photoFiles.addEventListener("change", renderPhotoPreview);
 photoForm.addEventListener("submit", submitPhotos);
-replayInvite.addEventListener("click", replayInvitation);
+replayInvite?.addEventListener("click", replayInvitation);
+document.querySelector(".paper-invite").addEventListener("click", turnInvitation);
+document.querySelector(".paper-invite").addEventListener("keydown", (event) => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    turnInvitation();
+  }
+});
+document.querySelector(".invite-card-3d").addEventListener("animationend", (event) => {
+  if (event.animationName === "card-reveal") {
+    document.querySelector(".paper-invite").classList.add("is-ready");
+  }
+});
+window.setTimeout(() => {
+  document.querySelector(".paper-invite").classList.add("is-ready");
+}, 4400);
 document.querySelectorAll("[data-rsvp-open]").forEach((button) => {
   button.addEventListener("click", () => openRsvpModal(button.dataset.rsvpOpen));
 });
@@ -281,4 +308,4 @@ document.addEventListener("keydown", (event) => {
 
 setHeaderState();
 resizeCanvas();
-requestAnimationFrame(drawConstellation);
+if (canvas && ctx) requestAnimationFrame(drawConstellation);
