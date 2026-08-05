@@ -8,7 +8,7 @@
       content="Wedding invitation for Antonis and Eirini, September 27, 2026 in Rhodes, Greece."
     />
     <title>Antonis & Eirini | Wedding Invitation</title>
-    <link rel="preload" href="assets/rhodes-hero.png" as="image" />
+    <link rel="preload" href="assets/wedding-invitation-template.jpg" as="image" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -19,36 +19,39 @@
       <nav>
         <a href="#story">Story</a>
         <a href="#day">The Day</a>
+        <a href="#photos">Photos</a>
         <a href="#rsvp">RSVP</a>
       </nav>
     </header>
 
     <main id="top">
       <section class="hero" aria-labelledby="hero-title">
-        <img class="hero-bg" src="assets/rhodes-hero.png" alt="" />
+        <img class="hero-bg" src="assets/wedding-invitation-template.jpg" alt="" />
         <canvas id="constellation" aria-hidden="true"></canvas>
         <div class="hero-shade"></div>
 
         <div class="hero-content">
           <p class="eyebrow hero-meta">27 September 2026 - Rhodes, Greece</p>
           <div class="paper-invite" aria-hidden="true">
+            <div class="envelope-back"></div>
             <div class="paper-card">
-              <span class="invite-small">Save the date</span>
-              <span class="invite-names">A & E</span>
-              <span class="invite-date">27.09.2026</span>
+              <img src="assets/wedding-invitation-template.jpg" alt="" />
             </div>
-            <div class="envelope-pocket"></div>
+            <div class="envelope-flap"></div>
+            <div class="envelope-pocket">
+              <span>A & E</span>
+            </div>
             <div class="envelope-line line-left"></div>
             <div class="envelope-line line-right"></div>
           </div>
           <h1 id="hero-title">Antonis & Eirini</h1>
           <p class="hero-copy">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-            vitae lacus sed sem commodo luctus in a place made for sea, light,
-            and celebration.
+            A watercolor invitation with island routes, quiet equations, and a
+            floral language drawn from the printed card.
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="#rsvp">Reply</a>
+            <a class="button primary" href="#rsvp">Reserve</a>
+            <button class="button ghost" id="replay-invite" type="button">Replay</button>
           </div>
         </div>
 
@@ -133,62 +136,132 @@
         </div>
       </section>
 
-      <section class="rsvp-section" id="rsvp" aria-labelledby="rsvp-title">
-        <div class="rsvp-copy">
-          <div class="section-kicker">RSVP</div>
-          <h2 id="rsvp-title">Tell us what to prepare for.</h2>
+      <section class="photo-section" id="photos" aria-labelledby="photos-title">
+        <div class="photo-copy">
+          <div class="section-kicker">Shared memories</div>
+          <h2 id="photos-title">A place for wedding photos.</h2>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Please
-            reply for the ceremony and celebration so the guest list stays clear.
+            After the wedding, guests can add their favorite photos here. The
+            page is ready for an upload service once storage is connected.
           </p>
           <p class="data-note">
-            RSVP submissions are ready to connect to Formspree, Google Apps
-            Script, or your own backend.
+            Photo uploads need a storage account such as Uploadcare, Cloudinary,
+            Supabase Storage, Google Drive, or a custom backend.
           </p>
         </div>
 
-        <form class="rsvp-form" id="rsvp-form">
+        <form class="photo-form" id="photo-form">
           <label>
-            Full name
-            <input name="name" autocomplete="name" required placeholder="Your name" />
+            Your name
+            <input name="photoName" autocomplete="name" placeholder="Your name" />
           </label>
-
-          <label>
-            Email
-            <input name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
+          <label class="upload-drop">
+            <input id="photo-files" name="photos" type="file" accept="image/*" multiple />
+            <span>Choose photos</span>
+            <small>JPG, PNG, or HEIC. Up to 8 MB each.</small>
           </label>
-
-          <label>
-            Number of guests
-            <input name="guests" type="number" min="1" max="8" value="1" required />
-          </label>
-
-          <fieldset>
-            <legend>Attendance</legend>
-            <label class="choice">
-              <input type="checkbox" name="events" value="ceremony" checked />
-              <span>Ceremony</span>
-            </label>
-            <label class="choice">
-              <input type="checkbox" name="events" value="celebration" checked />
-              <span>Celebration</span>
-            </label>
-          </fieldset>
-
-          <label>
-            Message
-            <textarea name="message" rows="4" placeholder="Dietary notes, song requests, or a short message"></textarea>
-          </label>
-
-          <button class="button primary form-button" type="submit">Send RSVP</button>
-          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          <div class="photo-preview" id="photo-preview" aria-live="polite"></div>
+          <button class="button primary form-button" type="submit">Upload photos</button>
+          <p class="form-status" id="photo-status" role="status" aria-live="polite"></p>
         </form>
+      </section>
+
+      <section class="rsvp-section" id="rsvp" aria-labelledby="rsvp-title">
+        <div class="rsvp-copy">
+          <div class="section-kicker">RSVP</div>
+          <h2 id="rsvp-title">Will you celebrate with us?</h2>
+          <p>
+            Please reserve your place so we can prepare the guest list and the
+            adult and kid menu totals for the suppliers.
+          </p>
+          <p class="data-note">
+            RSVP submissions can be saved to a Google Sheet, Formspree, or a
+            small custom backend.
+          </p>
+        </div>
+
+        <div class="rsvp-panel">
+          <p class="rsvp-date">Please reply when the final RSVP deadline is confirmed.</p>
+          <div class="rsvp-choice-actions">
+            <button class="button primary" type="button" data-rsvp-open="attending">
+              Yes, we will attend
+            </button>
+            <button class="button ghost" type="button" data-rsvp-open="declined">
+              Sadly, we cannot attend
+            </button>
+          </div>
+          <div class="supplier-summary" aria-label="Supplier data collected">
+            <span>Guest name</span>
+            <span>Attendance</span>
+            <span>Adults</span>
+            <span>Kids</span>
+            <span>Notes</span>
+          </div>
+        </div>
       </section>
     </main>
 
     <footer>
       <p>Antonis & Eirini - 27.09.2026 - Rhodes</p>
     </footer>
+
+    <div class="modal" id="rsvp-modal" aria-hidden="true">
+      <div class="modal-backdrop" data-rsvp-close></div>
+      <div
+        class="modal-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <button class="modal-close" type="button" data-rsvp-close aria-label="Close RSVP">
+          &times;
+        </button>
+        <div class="modal-floral" aria-hidden="true"></div>
+        <p class="section-kicker">RSVP</p>
+        <h2 id="modal-title">We will attend</h2>
+        <p class="modal-intro" id="modal-intro">
+          Add the number of adults and children so the menu totals are clear.
+        </p>
+
+        <form class="rsvp-form" id="rsvp-form">
+          <input type="hidden" name="attendance" id="attendance-field" value="attending" />
+          <label>
+            Full name
+            <input name="name" autocomplete="name" required placeholder="Your full name" />
+          </label>
+          <label>
+            Email
+            <input name="email" type="email" autocomplete="email" placeholder="Optional email" />
+          </label>
+          <div class="attendance-fields" id="attendance-fields">
+            <div class="count-grid">
+              <label>
+                Adult menus
+                <input name="adults" type="number" min="0" max="20" value="1" />
+              </label>
+              <label>
+                Kid menus
+                <input name="kids" type="number" min="0" max="20" value="0" />
+              </label>
+            </div>
+            <p class="field-help">
+              Use adult and kid menu totals only. Dietary restrictions can go in
+              the note below.
+            </p>
+          </div>
+          <label>
+            Optional note
+            <textarea
+              name="message"
+              rows="4"
+              placeholder="Allergies, access needs, or a short message"
+            ></textarea>
+          </label>
+          <button class="button primary form-button" type="submit">Submit RSVP</button>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
 
     <script src="script.js"></script>
   </body>

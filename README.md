@@ -6,17 +6,28 @@ Static wedding invitation site for Antonis and Eirini, dated 27 September 2026 i
 
 - `index.html` contains the page sections and RSVP form.
 - `styles.css` contains the visual system, responsive layout, and animation styling.
-- `script.js` contains the RSVP submission logic and decorative animation setup.
-- `assets/rhodes-hero.png` is the generated hero artwork used by the site.
+- `script.js` contains the RSVP modal logic, photo preview logic, and decorative animation setup.
+- `assets/wedding-invitation-template.jpg` is the real invitation artwork used by the hero.
 - `scripts/rsvp-google-apps-script.gs` is a ready-to-paste Google Sheets receiver.
 
 ## RSVP Setup
 
-The form is ready, but it needs a destination before real guest replies are saved. In `script.js`, set:
+The RSVP modal is ready, but it needs a destination before real guest replies are saved. In `script.js`, set:
 
 ```js
 rsvpEndpoint: "https://your-endpoint-here"
 ```
+
+The RSVP payload stores:
+
+- name
+- optional email
+- attendance: `attending` or `declined`
+- adult menu count
+- kid menu count
+- total guests
+- optional note
+- submission date and source page
 
 Practical options:
 
@@ -32,6 +43,25 @@ For the Google Apps Script deployment, use:
 - Who has access: `Anyone`
 
 The site sends a simple form-encoded payload so the same RSVP flow works with Formspree and Google Apps Script.
+
+You do not need guest emails to register RSVPs in a Google Sheet. Add guest email only if you want confirmation emails or follow-up messages. If you want notification emails to yourself, Formspree handles that by default; Google Apps Script can also send you an email with `MailApp.sendEmail`.
+
+## Photo Upload Setup
+
+The photo section previews selected images now, but real uploads require storage. In `script.js`, set:
+
+```js
+photoUploadEndpoint: "https://your-upload-endpoint-here"
+```
+
+Recommended storage options:
+
+1. Uploadcare: easiest guest upload widget/storage service.
+2. Cloudinary: good image storage and transformations.
+3. Supabase Storage: good if you want your own storage bucket and database.
+4. Custom backend: best for approval workflows and private galleries.
+
+Do not rely on the static website itself for storage. Guest photos need an external account or backend with enough storage quota.
 
 ## Local Preview
 
