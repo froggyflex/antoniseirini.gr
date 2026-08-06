@@ -7,13 +7,15 @@
     <meta name="theme-color" content="#f8f5ed" />
     <title>Αντώνης &amp; Ειρήνη | Η πρόσκλησή μας</title>
     <link rel="preload" href="assets/wedding-invitation-template.jpg" as="image" />
+    <script>document.documentElement.classList.add("js");</script>
     <link rel="stylesheet" href="styles.css" />
+    <noscript><style>.invite-motion{top:50%!important;opacity:1!important;transform:translate(-50%,-50%)!important;clip-path:none!important}.invite-folder,.folder-pocket{display:none!important}</style></noscript>
   </head>
   <body>
     <header class="site-header" aria-label="Κύρια πλοήγηση">
       <a class="brand" href="#top" aria-label="Αρχική σελίδα Αντώνη και Ειρήνης"><span>Α</span><i>&amp;</i><span>Ε</span></a>
       <nav aria-label="Ενότητες">
-        <a href="#invitation">Πρόσκληση</a><a href="#day">Η ημέρα</a><a href="#rsvp">Παρουσία</a><a href="#story">Η ιστορία μας</a><a href="#photos">Φωτογραφίες</a>
+        <a href="#invitation">Πρόσκληση</a><a href="#day">Η ημέρα</a><a href="#rsvp">Παρουσία</a><a href="#wishes">Ευχές</a><a href="#gifts">Δώρα</a><a href="#photos">Φωτογραφίες</a>
       </nav>
     </header>
 
@@ -22,7 +24,10 @@
         <div class="hero-shade"></div>
         <div class="hero-content">
           <h1 id="hero-title" class="sr-only">Η γαμήλια πρόσκληση του Αντώνη και της Ειρήνης</h1>
-          <div class="paper-invite is-replaying">
+          <div class="equation-intro" id="equation-intro" aria-hidden="true">
+            <canvas id="heart-equation"></canvas>
+          </div>
+          <div class="paper-invite">
             <div class="invite-stage" role="button" tabindex="0" aria-label="Προβολή της άλλης όψης του προσκλητηρίου">
               <div class="invite-folder" aria-hidden="true">
                 <div class="folder-back"></div>
@@ -40,6 +45,7 @@
                 </div>
               </div>
               <div class="folder-pocket" aria-hidden="true"><span>Α &amp; Ε</span></div>
+              <canvas class="magic-dust" id="magic-dust" aria-hidden="true"></canvas>
             </div>
             <div class="invite-controls" aria-label="Χειριστήρια προσκλητηρίου">
               <button type="button" id="flip-invite" aria-label="Προβολή της άλλης όψης" title="Άλλη όψη"><span aria-hidden="true">↻</span></button>
@@ -52,8 +58,8 @@
         <div class="section-kicker">Η ημέρα του γάμου</div><h2 id="day-title">Κυριακή, 27 Σεπτεμβρίου 2026</h2>
         <p class="day-lead">Θα είναι ιδιαίτερη χαρά και τιμή για εμάς να παρευρεθείτε και να μοιραστείτε μαζί μας αυτή τη σημαντική ημέρα.</p>
         <div class="timeline">
-          <article class="timeline-item"><span class="time">17:30</span><div><h3>Το μυστήριο</h3><p>Ιερός Ναός Αγίας Σοφίας<br />Καμινάρι, Αρχάγγελος Ρόδου</p><a class="text-link" href="https://maps.google.com/?q=Ι.Ν.+Αγίας+Σοφίας+Καμινάρι+Αρχάγγελος+Ρόδος" target="_blank" rel="noreferrer">Προβολή στον χάρτη →</a></div></article>
-          <article class="timeline-item"><span class="time">έπειτα</span><div><h3>Η δεξίωση</h3><p>Μετά την τέλεση του μυστηρίου θα ακολουθήσει δεξίωση. Οι σχετικές πληροφορίες θα ανακοινωθούν σύντομα.</p></div></article>
+          <article class="timeline-item"><span class="time">17:30</span><div><h3>Το μυστήριο</h3><p>Ιερός Ναός Αγίας Σοφίας<br />Καμινάρι, Αρχάγγελος Ρόδου</p></div></article>
+          <article class="timeline-item"><span class="time">έπειτα</span><div><h3>Η δεξίωση</h3><p>ΕΟ Ρόδου–Λίνδου, 35ο χλμ.<br />Μαλώνα 851 02, Ρόδος</p><a class="text-link" href="https://www.google.com/maps/search/?api=1&amp;query=EO%20Rodou%20Lindou%2035%20km%2C%20Malonas%2085102%2C%20Greece" target="_blank" rel="noreferrer">Προβολή στον χάρτη →</a></div></article>
         </div>
       </section>
 
@@ -62,16 +68,14 @@
         <div class="rsvp-panel"><p class="rsvp-date">Η καταληκτική ημερομηνία επιβεβαίωσης θα γνωστοποιηθεί σύντομα.</p><div class="rsvp-choice-actions"><button class="button primary" type="button" data-rsvp-open="attending">Θα παρευρεθούμε</button><button class="button ghost" type="button" data-rsvp-open="declined">Δεν θα μπορέσουμε να παρευρεθούμε</button></div></div>
       </section>
 
-      <section class="intro-section" id="story">
-        <div class="section-kicker">Η κοινή μας πορεία</div>
-        <div class="split">
-          <div><h2>Δύο ζωές,<br />μία κοινή διαδρομή.</h2></div>
-          <div class="body-copy"><p>Η κοινή μας πορεία είναι γεμάτη όμορφες στιγμές, ταξίδια και αναμνήσεις που μας έφεραν έως εδώ: στην απόφαση να ενώσουμε τις ζωές μας.</p><p>Την ημέρα αυτή επιθυμούμε να έχουμε κοντά μας τους ανθρώπους που αγαπάμε και που, με τον δικό τους τρόπο, αποτελούν μέρος της ιστορίας μας.</p></div>
-        </div>
-        <div class="function-visual" aria-label="Μια συμβολική διαδρομή από το Α στο Ε">
-          <span class="function-pin function-a">Α</span><span class="function-pin function-e">Ε</span>
-          <svg viewBox="0 0 960 280" aria-hidden="true"><defs><linearGradient id="functionFill" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#447f8e" stop-opacity="0.14" /><stop offset="100%" stop-color="#c98685" stop-opacity="0.16" /></linearGradient></defs><path class="function-area" d="M160 215 C265 176 330 114 424 142 C510 168 570 82 660 108 C742 132 776 200 846 68 L846 238 L160 238 Z" /><path class="function-ghost" d="M160 215 C265 176 330 114 424 142 C510 168 570 82 660 108 C742 132 776 200 846 68" /><path class="function-path" d="M160 215 C265 176 330 114 424 142 C510 168 570 82 660 108 C742 132 776 200 846 68" /><circle class="function-point p1" cx="160" cy="215" r="5" /><circle class="function-point p2" cx="424" cy="142" r="5" /><circle class="function-point p3" cx="660" cy="108" r="5" /><circle class="function-point p4" cx="846" cy="68" r="5" /></svg>
-        </div>
+      <section class="wish-section" id="wishes" aria-labelledby="wishes-title">
+        <div class="wish-copy"><div class="section-kicker">Οι ευχές σας</div><h2 id="wishes-title">Αφήστε μας μια ευχή για τη νέα μας αρχή.</h2><p>Τα λόγια σας θα μείνουν μαζί μας ως μια μικρή ανάμνηση από τους ανθρώπους που μοιράζονται τη χαρά μας.</p></div>
+        <form class="wish-form" id="wish-form"><label>Ονοματεπώνυμο<input name="wishName" autocomplete="name" required placeholder="Το ονοματεπώνυμό σας" /></label><label>Η ευχή σας<textarea name="wishMessage" rows="6" maxlength="500" required placeholder="Γράψτε την ευχή σας..."></textarea></label><button class="button primary form-button" type="submit">Αποστολή ευχής</button><p class="form-status" id="wish-status" role="status" aria-live="polite"></p></form>
+      </section>
+
+      <section class="gift-section" id="gifts" aria-labelledby="gifts-title">
+        <div class="gift-copy"><div class="section-kicker">Δώρα</div><h2 id="gifts-title">Η παρουσία σας είναι το πιο όμορφο δώρο.</h2><p>Για όσους επιθυμούν να συνεισφέρουν στο νέο μας ξεκίνημα, θα υπάρχει η δυνατότητα τραπεζικής κατάθεσης.</p></div>
+        <div class="gift-details"><span class="bank-label">IBAN</span><p class="iban-value" id="gift-iban">Το IBAN θα προστεθεί σύντομα.</p><button class="button ghost copy-iban" id="copy-iban" type="button" hidden>Αντιγραφή IBAN</button><p class="form-status" id="iban-status" role="status" aria-live="polite"></p></div>
       </section>
 
       <section class="photo-section" id="photos" aria-labelledby="photos-title">
@@ -82,7 +86,7 @@
 
     <footer><p>Αντώνης &amp; Ειρήνη · 27.09.2026 · Ρόδος</p><small>Με ιδιαίτερη χαρά θα σας περιμένουμε</small></footer>
 
-    <div class="modal" id="rsvp-modal" aria-hidden="true"><div class="modal-backdrop" data-rsvp-close></div><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button class="modal-close" type="button" data-rsvp-close aria-label="Κλείσιμο φόρμας">&times;</button><div class="modal-floral" aria-hidden="true"></div><p class="section-kicker">Επιβεβαίωση παρουσίας</p><h2 id="modal-title">Θα παρευρεθούμε</h2><p class="modal-intro" id="modal-intro">Παρακαλούμε συμπληρώστε τον αριθμό ενηλίκων και παιδιών που θα παρευρεθούν.</p><form class="rsvp-form" id="rsvp-form"><input type="hidden" name="attendance" id="attendance-field" value="attending" /><label>Ονοματεπώνυμο<input name="name" autocomplete="name" required placeholder="Το ονοματεπώνυμό σας" /></label><label>Email<input name="email" type="email" autocomplete="email" placeholder="Προαιρετικό" /></label><div class="attendance-fields" id="attendance-fields"><div class="count-grid"><label>Ενήλικες<input name="adults" type="number" min="0" max="20" value="1" /></label><label>Παιδιά<input name="kids" type="number" min="0" max="20" value="0" /></label></div><p class="field-help">Μπορείτε να αναφέρετε τυχόν διατροφικές προτιμήσεις, αλλεργίες ή ανάγκες προσβασιμότητας στο πεδίο που ακολουθεί.</p></div><label>Παρατηρήσεις<textarea name="message" rows="4" placeholder="Προαιρετικό μήνυμα"></textarea></label><button class="button primary form-button" type="submit">Αποστολή</button><p class="form-status" id="form-status" role="status" aria-live="polite"></p></form></div></div>
+    <div class="modal" id="rsvp-modal" aria-hidden="true"><div class="modal-backdrop" data-rsvp-close></div><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button class="modal-close" type="button" data-rsvp-close aria-label="Κλείσιμο φόρμας">&times;</button><p class="section-kicker">Επιβεβαίωση παρουσίας</p><h2 id="modal-title">Θα παρευρεθούμε</h2><p class="modal-intro" id="modal-intro">Παρακαλούμε συμπληρώστε τον αριθμό ενηλίκων και παιδιών που θα παρευρεθούν.</p><form class="rsvp-form" id="rsvp-form"><input type="hidden" name="attendance" id="attendance-field" value="attending" /><label>Ονοματεπώνυμο<input name="name" autocomplete="name" required placeholder="Το ονοματεπώνυμό σας" /></label><label>Email<input name="email" type="email" autocomplete="email" placeholder="Προαιρετικό" /></label><div class="attendance-fields" id="attendance-fields"><div class="count-grid"><label>Ενήλικες<input name="adults" type="number" min="0" max="20" value="1" /></label><label>Παιδιά<input name="kids" type="number" min="0" max="20" value="0" /></label></div><p class="field-help">Μπορείτε να αναφέρετε τυχόν διατροφικές προτιμήσεις, αλλεργίες ή ανάγκες προσβασιμότητας στο πεδίο που ακολουθεί.</p></div><label>Παρατηρήσεις<textarea name="message" rows="4" placeholder="Προαιρετικό μήνυμα"></textarea></label><button class="button primary form-button" type="submit">Αποστολή</button><p class="form-status" id="form-status" role="status" aria-live="polite"></p></form></div></div>
     <script src="script.js"></script>
   </body>
 </html>
