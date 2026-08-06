@@ -2549,7 +2549,7 @@ footer small {
 
 .modal-card {
   background:
-    linear-gradient(rgba(248, 248, 239, 0.86), rgba(242, 243, 232, 0.9)),
+    linear-gradient(rgba(248, 248, 239, 0.34), rgba(242, 243, 232, 0.44)),
     url("assets/popup-texture.jpg") center / cover no-repeat;
 }
 
@@ -2559,7 +2559,7 @@ footer small {
 }
 
 .modal-card .rsvp-form {
-  background: rgba(251, 250, 246, 0.66);
+  background: rgba(251, 250, 246, 0.58);
 }
 
 .hero {
