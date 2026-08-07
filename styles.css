@@ -2969,7 +2969,9 @@ footer small {
 }
 
 .paper-invite.is-intro {
-  animation: invitation-stage-soft-in 0.65s cubic-bezier(0.22, 0.76, 0.24, 1) both;
+  opacity: 1;
+  transform: none;
+  animation: none !important;
 }
 
 .paper-invite.is-intro:not(.intro-complete) .invite-stage {
@@ -3063,13 +3065,13 @@ footer small {
 
 .paper-invite.is-intro.is-replaying:not(.is-ready) .invite-folder,
 .paper-invite.is-intro.is-replaying:not(.is-ready) .folder-pocket {
-  animation: irl-envelope-bounce 0.82s cubic-bezier(0.2, 0.78, 0.22, 1) both !important;
+  animation: irl-envelope-bounce 0.88s cubic-bezier(0.22, 0.76, 0.24, 1) both !important;
 }
 
 .paper-invite.is-intro.is-replaying.is-card-out:not(.is-ready) .invite-folder,
 .paper-invite.is-intro.is-replaying.is-card-out:not(.is-ready) .folder-pocket {
   z-index: 1;
-  animation: irl-envelope-depart 0.72s cubic-bezier(0.32, 0.68, 0.3, 1) both !important;
+  animation: irl-envelope-depart 0.88s cubic-bezier(0.22, 0.72, 0.2, 1) both !important;
 }
 
 .paper-invite.is-intro.is-replaying:not(.is-ready) .folder-flap {
@@ -3077,16 +3079,12 @@ footer small {
 }
 
 .paper-invite.is-intro.is-replaying:not(.is-ready) .invite-motion {
-  top: 74%;
+  top: 80%;
   visibility: visible;
   opacity: 1;
   filter: none;
   transform: translate3d(-50%, -50%, 0) scale(0.72);
-  animation: irl-card-emerge 2.4s 0.72s cubic-bezier(0.18, 0.78, 0.2, 1) both !important;
-}
-
-.paper-invite.is-intro.is-replaying.is-card-out:not(.is-ready) .invite-motion {
-  animation: irl-card-settle 0.72s cubic-bezier(0.22, 0.72, 0.2, 1) both !important;
+  animation: irl-card-emerge 3.4s 0.72s linear both !important;
 }
 
 .paper-invite.is-intro.is-ready .invite-motion {
@@ -3105,21 +3103,15 @@ footer small {
 @keyframes irl-envelope-bounce {
   0% {
     opacity: 0;
-    transform: translate3d(-50%, -38%, 0) scale(0.86) rotateY(-12deg) rotateZ(-1.2deg);
+    transform: translate3d(-50%, -39%, 0) scale(0.92);
   }
-  42% {
+  68% {
     opacity: 1;
-    transform: translate3d(-50%, -57%, 0) scale(1.025) rotateY(4deg) rotateZ(0.45deg);
-  }
-  66% {
-    transform: translate3d(-50%, -46%, 0) scale(0.985) rotateY(-2deg) rotateZ(-0.2deg);
-  }
-  84% {
-    transform: translate3d(-50%, -52%, 0) scale(1.008) rotateY(0.8deg) rotateZ(0.08deg);
+    transform: translate3d(-50%, -53%, 0) scale(1.012);
   }
   100% {
     opacity: 1;
-    transform: translate3d(-50%, -50%, 0) scale(1) rotateY(0deg) rotateZ(0deg);
+    transform: translate3d(-50%, -50%, 0) scale(1);
   }
 }
 
@@ -3136,43 +3128,17 @@ footer small {
 }
 
 @keyframes irl-card-emerge {
-  0%, 34% {
-    top: 74%;
+  0%, 26% {
+    top: 80%;
     opacity: 1;
     transform: translate3d(-50%, -50%, 0) scale(0.82);
+    animation-timing-function: cubic-bezier(0.32, 0, 0.18, 1);
   }
-  42% {
-    top: 71%;
-    transform: translate3d(-50%, -50%, 0) scale(0.82);
-  }
-  58% {
-    top: 55%;
-    transform: translate3d(-50%, -50%, 0) scale(0.82);
-  }
-  72% {
-    top: 34%;
-    transform: translate3d(-50%, -50%, 0) scale(0.82);
-  }
-  86% {
-    top: 16%;
-    transform: translate3d(-50%, -50%, 0) scale(0.82);
-  }
-  100% {
-    top: 15%;
+  74% {
+    top: 11%;
     opacity: 1;
     transform: translate3d(-50%, -50%, 0) scale(0.82);
-  }
-}
-
-@keyframes irl-card-settle {
-  0% {
-    top: 15%;
-    opacity: 1;
-    transform: translate3d(-50%, -50%, 0) scale(0.82);
-  }
-  62% {
-    top: 52%;
-    transform: translate3d(-50%, -50%, 0) scale(1.012);
+    animation-timing-function: cubic-bezier(0.22, 0.72, 0.2, 1);
   }
   100% {
     top: 50%;

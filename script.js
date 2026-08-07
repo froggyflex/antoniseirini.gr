@@ -41,6 +41,7 @@ const folderPocket = document.querySelector(".folder-pocket");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let envelopeSequenceStarted = false;
 let invitationReadyTimer;
+let envelopeReleaseTimer;
 let heartCurvePoints;
 let magicDustFrame;
 
@@ -664,6 +665,7 @@ function completeEnvelopeSequence() {
   if (invite.classList.contains("is-ready")) return;
 
   window.clearTimeout(invitationReadyTimer);
+  window.clearTimeout(envelopeReleaseTimer);
   invite.classList.add("is-ready");
 
   window.setTimeout(() => {
@@ -683,6 +685,8 @@ function releaseEnvelopeAfterCard() {
 }
 
 function startInvitationIntro() {
+  window.clearTimeout(invitationReadyTimer);
+  window.clearTimeout(envelopeReleaseTimer);
   equationIntro?.setAttribute("hidden", "");
   invite.classList.remove("is-ready", "is-flipped", "is-card-out", "intro-complete");
   invite.classList.add("is-intro", "is-replaying");
@@ -695,6 +699,7 @@ function startInvitationIntro() {
     return;
   }
 
+  envelopeReleaseTimer = window.setTimeout(releaseEnvelopeAfterCard, 3240);
   invitationReadyTimer = window.setTimeout(completeEnvelopeSequence, 4400);
 }
 
@@ -721,11 +726,6 @@ inviteStage.addEventListener("pointerup", (event) => {
 });
 flipInvite.addEventListener("click", flipInvitation);
 document.querySelector(".invite-motion").addEventListener("animationend", (event) => {
-  if (event.animationName === "irl-card-emerge") {
-    releaseEnvelopeAfterCard();
-    return;
-  }
-
   if (event.animationName === "invitation-release") {
     window.clearTimeout(invitationReadyTimer);
     invite.classList.add("is-ready");
