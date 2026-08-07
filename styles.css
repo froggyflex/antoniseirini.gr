@@ -2940,21 +2940,273 @@ footer small {
 
 .invite-back img {
   display: block;
-  width: 116%;
-  height: 116%;
-  margin: -8%;
-  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  object-fit: contain;
 }
 
 /* Client revisions: green-wall hero, unified venue, and RSVP choices */
 .hero {
-  background: url("assets/green-wall-hero.png") center / cover no-repeat;
+  background: url("assets/client-plain-background.jpg") center / cover no-repeat;
 }
 
 .hero-shade {
   background:
-    radial-gradient(circle at 50% 48%, rgba(247, 245, 236, 0.18), transparent 38%),
-    linear-gradient(180deg, rgba(35, 48, 30, 0.1), rgba(35, 48, 30, 0.22));
+    radial-gradient(circle at 50% 48%, rgba(255, 254, 247, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(61, 68, 49, 0.03), rgba(61, 68, 49, 0.1));
+}
+
+.hero::before,
+.hero::after {
+  display: none;
+}
+
+/* Lightweight two-sided reveal: back first, then the invitation content. */
+.equation-intro,
+.magic-dust {
+  display: none !important;
+}
+
+.paper-invite.is-intro {
+  animation: invitation-stage-soft-in 0.65s cubic-bezier(0.22, 0.76, 0.24, 1) both;
+}
+
+.paper-invite.is-intro:not(.intro-complete) .invite-stage {
+  pointer-events: none;
+}
+
+.paper-invite.is-intro:not(.intro-complete) .invite-controls {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.invite-motion,
+.paper-invite.is-ready .invite-motion {
+  top: 50%;
+  visibility: visible;
+  opacity: 1;
+  filter: none;
+  transform: translate3d(-50%, -50%, 0) scale(1);
+  clip-path: none;
+  animation: none !important;
+}
+
+/* The fixed opening acts as the physical mouth of the envelope. The card can
+   move as one GPU-composited object instead of redrawing a changing crop. */
+.invite-track {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  clip-path: inset(-100vh -100vw 57% -100vw);
+  pointer-events: none;
+}
+
+.paper-invite.is-intro.is-card-out .invite-track,
+.paper-invite.is-intro.is-ready .invite-track {
+  z-index: 3;
+  clip-path: none;
+}
+
+.invite-card-3d,
+.paper-invite.is-ready .invite-card-3d,
+.paper-invite.is-replaying.is-ready .invite-card-3d {
+  transform: rotateY(0deg) translateZ(0) !important;
+  transition: transform 1.05s cubic-bezier(0.2, 0.72, 0.2, 1);
+  animation: none !important;
+}
+
+.paper-invite.is-intro.is-ready:not(.is-flipped) .invite-card-3d {
+  transform: rotateY(0deg) translateZ(0) !important;
+}
+
+.invite-front {
+  transform: rotateY(180deg) translateZ(1px);
+}
+
+.invite-back {
+  transform: rotateY(0deg) translateZ(1px);
+}
+
+.paper-invite.is-intro.is-ready.is-flipped .invite-card-3d,
+.paper-invite.is-replaying.is-intro.is-ready.is-flipped .invite-card-3d {
+  transform: rotateY(180deg) translateZ(0) !important;
+}
+
+@keyframes invitation-stage-soft-in {
+  0% { opacity: 0; transform: translateY(18px) scale(0.975); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paper-invite.is-intro {
+    animation: none;
+  }
+
+  .invite-card-3d,
+  .paper-invite.is-ready .invite-card-3d {
+    transition: none;
+  }
+}
+
+/* Physical envelope sequence: bounce, open, release the back, then turn. */
+.invite-folder,
+.folder-pocket {
+  display: block;
+  opacity: 1;
+  will-change: transform, opacity;
+}
+
+.invite-stage::after {
+  display: none !important;
+}
+
+.paper-invite.is-intro.is-replaying:not(.is-ready) .invite-folder,
+.paper-invite.is-intro.is-replaying:not(.is-ready) .folder-pocket {
+  animation: irl-envelope-bounce 0.82s cubic-bezier(0.2, 0.78, 0.22, 1) both !important;
+}
+
+.paper-invite.is-intro.is-replaying.is-card-out:not(.is-ready) .invite-folder,
+.paper-invite.is-intro.is-replaying.is-card-out:not(.is-ready) .folder-pocket {
+  z-index: 1;
+  animation: irl-envelope-depart 0.72s cubic-bezier(0.32, 0.68, 0.3, 1) both !important;
+}
+
+.paper-invite.is-intro.is-replaying:not(.is-ready) .folder-flap {
+  animation: irl-flap-open 0.9s 0.72s cubic-bezier(0.22, 0.72, 0.18, 1) both !important;
+}
+
+.paper-invite.is-intro.is-replaying:not(.is-ready) .invite-motion {
+  top: 74%;
+  visibility: visible;
+  opacity: 1;
+  filter: none;
+  transform: translate3d(-50%, -50%, 0) scale(0.72);
+  animation: irl-card-emerge 2.4s 0.72s cubic-bezier(0.18, 0.78, 0.2, 1) both !important;
+}
+
+.paper-invite.is-intro.is-replaying.is-card-out:not(.is-ready) .invite-motion {
+  animation: irl-card-settle 0.72s cubic-bezier(0.22, 0.72, 0.2, 1) both !important;
+}
+
+.paper-invite.is-intro.is-ready .invite-motion {
+  top: 50%;
+  visibility: visible;
+  opacity: 1;
+  transform: translate3d(-50%, -50%, 0) scale(1);
+}
+
+.paper-invite.is-intro.is-ready .invite-folder,
+.paper-invite.is-intro.is-ready .folder-pocket {
+  visibility: hidden;
+  opacity: 0;
+}
+
+@keyframes irl-envelope-bounce {
+  0% {
+    opacity: 0;
+    transform: translate3d(-50%, -38%, 0) scale(0.86) rotateY(-12deg) rotateZ(-1.2deg);
+  }
+  42% {
+    opacity: 1;
+    transform: translate3d(-50%, -57%, 0) scale(1.025) rotateY(4deg) rotateZ(0.45deg);
+  }
+  66% {
+    transform: translate3d(-50%, -46%, 0) scale(0.985) rotateY(-2deg) rotateZ(-0.2deg);
+  }
+  84% {
+    transform: translate3d(-50%, -52%, 0) scale(1.008) rotateY(0.8deg) rotateZ(0.08deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(-50%, -50%, 0) scale(1) rotateY(0deg) rotateZ(0deg);
+  }
+}
+
+@keyframes irl-flap-open {
+  0%, 12% {
+    transform: perspective(900px) rotateX(0deg);
+  }
+  62% {
+    transform: perspective(900px) rotateX(-176deg);
+  }
+  100% {
+    transform: perspective(900px) rotateX(-168deg);
+  }
+}
+
+@keyframes irl-card-emerge {
+  0%, 34% {
+    top: 74%;
+    opacity: 1;
+    transform: translate3d(-50%, -50%, 0) scale(0.82);
+  }
+  42% {
+    top: 71%;
+    transform: translate3d(-50%, -50%, 0) scale(0.82);
+  }
+  58% {
+    top: 55%;
+    transform: translate3d(-50%, -50%, 0) scale(0.82);
+  }
+  72% {
+    top: 34%;
+    transform: translate3d(-50%, -50%, 0) scale(0.82);
+  }
+  86% {
+    top: 16%;
+    transform: translate3d(-50%, -50%, 0) scale(0.82);
+  }
+  100% {
+    top: 15%;
+    opacity: 1;
+    transform: translate3d(-50%, -50%, 0) scale(0.82);
+  }
+}
+
+@keyframes irl-card-settle {
+  0% {
+    top: 15%;
+    opacity: 1;
+    transform: translate3d(-50%, -50%, 0) scale(0.82);
+  }
+  62% {
+    top: 52%;
+    transform: translate3d(-50%, -50%, 0) scale(1.012);
+  }
+  100% {
+    top: 50%;
+    opacity: 1;
+    transform: translate3d(-50%, -50%, 0) scale(1);
+  }
+}
+
+/* The supplied back artwork is narrower than the printed invitation face.
+   A small horizontal fit reaches the frame edges while preserving every flower. */
+.invite-back img {
+  object-fit: fill;
+}
+
+@media (max-width: 700px) {
+  .invite-track {
+    clip-path: inset(-100vh -100vw 54.5% -100vw);
+  }
+
+  .paper-invite.is-intro.is-card-out .invite-track,
+  .paper-invite.is-intro.is-ready .invite-track {
+    clip-path: none;
+  }
+}
+
+@keyframes irl-envelope-depart {
+  0% {
+    opacity: 1;
+    transform: translate3d(-50%, -50%, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-50%, -34%, 0) scale(0.94);
+  }
 }
 
 .venue-card {
@@ -3111,9 +3363,9 @@ footer small {
 
 @media (max-width: 700px) {
   .invite-back img {
-    width: 122%;
-    height: 122%;
-    margin: -11%;
+    width: 100%;
+    height: 100%;
+    margin: 0;
   }
 
   .venue-card {

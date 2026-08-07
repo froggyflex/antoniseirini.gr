@@ -37,6 +37,7 @@ const heartContext = heartCanvas?.getContext("2d");
 const magicDustCanvas = document.querySelector("#magic-dust");
 const magicDustContext = magicDustCanvas?.getContext("2d");
 const inviteMotion = document.querySelector(".invite-motion");
+const folderPocket = document.querySelector(".folder-pocket");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let envelopeSequenceStarted = false;
 let invitationReadyTimer;
@@ -52,20 +53,24 @@ function updateKidsMenuNote() {
   kidsMenuNote.hidden = !shouldShow;
 }
 
-function flipInvitation() {
-  if (!invite.classList.contains("is-ready")) return;
-  const isFlipped = invite.classList.toggle("is-flipped");
+function updateInvitationLabels(isShowingFront) {
   flipInvite.setAttribute(
     "aria-label",
-    isFlipped ? "Προβολή της μπροστινής όψης" : "Προβολή της άλλης όψης",
+    isShowingFront ? "Προβολή της πίσω όψης" : "Προβολή της μπροστινής όψης",
   );
-  flipInvite.setAttribute("title", isFlipped ? "Μπροστινή όψη" : "Άλλη όψη");
+  flipInvite.setAttribute("title", isShowingFront ? "Πίσω όψη" : "Μπροστινή όψη");
   inviteStage.setAttribute(
     "aria-label",
-    isFlipped
-      ? "Προβολή της μπροστινής όψης του προσκλητηρίου"
-      : "Προβολή της άλλης όψης του προσκλητηρίου",
+    isShowingFront
+      ? "Προβολή της πίσω όψης του προσκλητηρίου"
+      : "Προβολή της μπροστινής όψης του προσκλητηρίου",
   );
+}
+
+function flipInvitation() {
+  if (!invite.classList.contains("is-ready")) return;
+  const isShowingFront = invite.classList.toggle("is-flipped");
+  updateInvitationLabels(isShowingFront);
 }
 
 function openRsvpModal(attendance) {
@@ -655,38 +660,42 @@ function startEnvelopeSequence() {
   }, 3000);
 }
 
+function completeEnvelopeSequence() {
+  if (invite.classList.contains("is-ready")) return;
+
+  window.clearTimeout(invitationReadyTimer);
+  invite.classList.add("is-ready");
+
+  window.setTimeout(() => {
+    invite.classList.add("is-flipped");
+    updateInvitationLabels(true);
+  }, 240);
+
+  window.setTimeout(() => {
+    invite.classList.remove("is-replaying");
+    invite.classList.add("intro-complete");
+  }, 1460);
+}
+
+function releaseEnvelopeAfterCard() {
+  if (invite.classList.contains("is-ready") || invite.classList.contains("is-card-out")) return;
+  invite.classList.add("is-card-out");
+}
+
 function startInvitationIntro() {
-  if (!equationIntro || !heartCanvas || !heartContext || reducedMotion.matches) {
-    equationIntro?.setAttribute("hidden", "");
-    invite.classList.add("is-ready");
+  equationIntro?.setAttribute("hidden", "");
+  invite.classList.remove("is-ready", "is-flipped", "is-card-out", "intro-complete");
+  invite.classList.add("is-intro", "is-replaying");
+  updateInvitationLabels(false);
+
+  if (reducedMotion.matches) {
+    invite.classList.remove("is-replaying");
+    invite.classList.add("is-ready", "is-flipped", "intro-complete");
+    updateInvitationLabels(true);
     return;
   }
 
-  const startTime = performance.now();
-  const totalDuration = 2150;
-
-  function animateHeart(now) {
-    const elapsed = now - startTime;
-    const axisProgress = Math.min(1, elapsed / 500);
-    const curveProgress = Math.min(1, Math.max(0, (elapsed - 280) / 1450));
-    const pulse = elapsed > 1750
-      ? (Math.sin(((elapsed - 1750) / 400) * Math.PI) + 1) / 2
-      : 0;
-
-    drawHeartEquation(axisProgress, curveProgress, pulse);
-
-    if (elapsed < totalDuration) {
-      requestAnimationFrame(animateHeart);
-      return;
-    }
-
-    drawHeartEquation(1, 1, 0.35);
-    equationIntro.classList.add("is-solved");
-    window.setTimeout(startEnvelopeSequence, 260);
-    window.setTimeout(() => equationIntro.setAttribute("hidden", ""), 850);
-  }
-
-  requestAnimationFrame(animateHeart);
+  invitationReadyTimer = window.setTimeout(completeEnvelopeSequence, 4400);
 }
 
 window.addEventListener("scroll", setHeaderState, { passive: true });
@@ -712,9 +721,19 @@ inviteStage.addEventListener("pointerup", (event) => {
 });
 flipInvite.addEventListener("click", flipInvitation);
 document.querySelector(".invite-motion").addEventListener("animationend", (event) => {
+  if (event.animationName === "irl-card-emerge") {
+    releaseEnvelopeAfterCard();
+    return;
+  }
+
   if (event.animationName === "invitation-release") {
     window.clearTimeout(invitationReadyTimer);
     invite.classList.add("is-ready");
+  }
+});
+folderPocket.addEventListener("animationend", (event) => {
+  if (event.animationName === "irl-envelope-depart") {
+    completeEnvelopeSequence();
   }
 });
 document.querySelectorAll("[data-rsvp-open]").forEach((button) => {
@@ -732,7 +751,11 @@ document.addEventListener("keydown", (event) => {
 setHeaderState();
 resizeCanvas();
 if (canvas && ctx) requestAnimationFrame(drawConstellation);
-startInvitationIntro();
+if (document.readyState === "complete") {
+  startInvitationIntro();
+} else {
+  window.addEventListener("load", startInvitationIntro, { once: true });
+}
 
 if (CONFIG.giftIban) {
   giftIban.textContent = CONFIG.giftIban;
