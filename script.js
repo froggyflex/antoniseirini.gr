@@ -2,7 +2,7 @@ const CONFIG = {
   rsvpEndpoint: "",
   wishesEndpoint: "",
   photoUploadEndpoint: "",
-  giftIban: "",
+  giftIban: "GR0602601630000860201065201",
   maxPhotoUploadMb: 8,
   couple: "Αντώνης & Ειρήνη",
 };
@@ -17,6 +17,8 @@ const modalTitle = document.querySelector("#modal-title");
 const modalIntro = document.querySelector("#modal-intro");
 const attendanceField = document.querySelector("#attendance-field");
 const attendanceFields = document.querySelector("#attendance-fields");
+const kidsField = document.querySelector("#kids-field");
+const kidsMenuNote = document.querySelector("#kids-menu-note");
 const invite = document.querySelector(".paper-invite");
 const inviteStage = document.querySelector(".invite-stage");
 const flipInvite = document.querySelector("#flip-invite");
@@ -45,6 +47,11 @@ function setHeaderState() {
   header.classList.toggle("is-scrolled", window.scrollY > window.innerHeight * 0.82);
 }
 
+function updateKidsMenuNote() {
+  const shouldShow = attendanceField.value === "attending" && Number(kidsField.value) > 0;
+  kidsMenuNote.hidden = !shouldShow;
+}
+
 function flipInvitation() {
   if (!invite.classList.contains("is-ready")) return;
   const isFlipped = invite.classList.toggle("is-flipped");
@@ -69,6 +76,7 @@ function openRsvpModal(attendance) {
     ? "Παρακαλούμε συμπληρώστε τον αριθμό ενηλίκων και παιδιών που θα παρευρεθούν."
     : "Παρακαλούμε καταχωρίστε την απάντησή σας, ώστε να ενημερωθεί η λίστα των προσκεκλημένων.";
   attendanceFields.hidden = !isAttending;
+  updateKidsMenuNote();
   modal.classList.add("is-open");
   modal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
@@ -97,7 +105,6 @@ async function submitRsvp(event) {
 
   const payload = {
     name: data.get("name"),
-    email: data.get("email"),
     attendance,
     adultMenus,
     kidMenus,
@@ -120,7 +127,6 @@ async function submitRsvp(event) {
     const body = new URLSearchParams({
       type: "rsvp",
       name: payload.name,
-      email: payload.email || "",
       attendance: payload.attendance,
       adultMenus: String(payload.adultMenus),
       kidMenus: String(payload.kidMenus),
@@ -141,6 +147,7 @@ async function submitRsvp(event) {
     }
 
     form.reset();
+    updateKidsMenuNote();
     statusEl.textContent = "Ευχαριστούμε! Η απάντησή σας στάλθηκε.";
     setTimeout(closeRsvpModal, 900);
   } catch (error) {
@@ -674,6 +681,7 @@ function startInvitationIntro() {
 window.addEventListener("scroll", setHeaderState, { passive: true });
 window.addEventListener("resize", resizeCanvas);
 form.addEventListener("submit", submitRsvp);
+kidsField.addEventListener("input", updateKidsMenuNote);
 photoFiles.addEventListener("change", renderPhotoPreview);
 photoForm.addEventListener("submit", submitPhotos);
 wishForm.addEventListener("submit", submitWish);

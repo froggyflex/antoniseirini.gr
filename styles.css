@@ -2925,3 +2925,88 @@ footer small {
     display: none;
   }
 }
+
+/* Final invitation back, RSVP contacts, and conditional child-menu note */
+.invite-back {
+  display: block;
+  padding: 0;
+  background: #fff;
+}
+
+.invite-back::before,
+.invite-back::after {
+  display: none;
+}
+
+.invite-back img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.rsvp-contacts {
+  max-width: 520px;
+  margin-top: 30px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(111, 121, 104, 0.3);
+}
+
+.rsvp-contacts > p {
+  margin: 0 0 14px;
+  color: var(--sage-deep);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.contact-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+}
+
+.contact-list a {
+  display: grid;
+  gap: 3px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.contact-list strong {
+  color: var(--sage-deep);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.contact-list span {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.12rem;
+}
+
+.contact-list a:hover span {
+  color: var(--sage-deep);
+}
+
+.kids-menu-note {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-left: 2px solid rgba(201, 168, 101, 0.72);
+  background: rgba(251, 250, 246, 0.42);
+  color: var(--sage-deep);
+}
+
+.kids-menu-note[hidden] {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .rsvp-contacts {
+    margin-top: 24px;
+  }
+
+  .contact-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}

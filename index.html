@@ -36,12 +36,7 @@
               <div class="invite-motion">
                 <div class="invite-card-3d">
                   <div class="invite-face invite-front"><img src="assets/wedding-invitation-template.jpg" alt="Προσκλητήριο γάμου του Αντώνη και της Ειρήνης, 27 Σεπτεμβρίου 2026, ώρα 17:30, Ιερός Ναός Αγίας Σοφίας στο Καμινάρι Αρχαγγέλου" /></div>
-                  <div class="invite-face invite-back" aria-label="Πίσω όψη προσκλητηρίου">
-                    <span>27</span>
-                    <strong>Α <i>&amp;</i> Ε</strong>
-                    <span>09</span>
-                    <small>2026 · Ρόδος</small>
-                  </div>
+                  <div class="invite-face invite-back"><img src="assets/wedding-invitation-back.png" alt="Πίσω όψη του προσκλητηρίου με τα αρχικά Α και Ε και την ημερομηνία 27 Σεπτεμβρίου" /></div>
                 </div>
               </div>
               <div class="folder-pocket" aria-hidden="true"><span>Α &amp; Ε</span></div>
@@ -65,7 +60,7 @@
 
       <section class="rsvp-section" id="rsvp" aria-labelledby="rsvp-title">
         <div class="rsvp-copy"><div class="section-kicker">Επιβεβαίωση παρουσίας</div><h2 id="rsvp-title">Θα χαρούμε να σας έχουμε κοντά μας.</h2><p>Παρακαλούμε να μας ενημερώσετε για την παρουσία σας, καθώς και για τον αριθμό των ατόμων που θα παρευρεθούν.</p></div>
-        <div class="rsvp-panel"><p class="rsvp-date">Η καταληκτική ημερομηνία επιβεβαίωσης θα γνωστοποιηθεί σύντομα.</p><div class="rsvp-choice-actions"><button class="button primary" type="button" data-rsvp-open="attending">Θα παρευρεθούμε</button><button class="button ghost" type="button" data-rsvp-open="declined">Δεν θα μπορέσουμε να παρευρεθούμε</button></div></div>
+        <div class="rsvp-panel"><div class="rsvp-choice-actions"><button class="button primary" type="button" data-rsvp-open="attending">Θα παρευρεθούμε</button><button class="button ghost" type="button" data-rsvp-open="declined">Δεν θα μπορέσουμε να παρευρεθούμε</button></div><div class="rsvp-contacts"><p>Για τυχόν αλλαγές στην απάντησή σας, καλέστε μας:</p><div class="contact-list"><a href="tel:+306947775058"><strong>Αντώνης</strong><span>694 777 5058</span></a><a href="tel:+306955466590"><strong>Ειρήνη</strong><span>695 546 6590</span></a></div></div></div>
       </section>
 
       <section class="wish-section" id="wishes" aria-labelledby="wishes-title">
@@ -86,7 +81,7 @@
 
     <footer><p>Αντώνης &amp; Ειρήνη · 27.09.2026 · Ρόδος</p><small>Με ιδιαίτερη χαρά θα σας περιμένουμε</small></footer>
 
-    <div class="modal" id="rsvp-modal" aria-hidden="true"><div class="modal-backdrop" data-rsvp-close></div><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button class="modal-close" type="button" data-rsvp-close aria-label="Κλείσιμο φόρμας">&times;</button><p class="section-kicker">Επιβεβαίωση παρουσίας</p><h2 id="modal-title">Θα παρευρεθούμε</h2><p class="modal-intro" id="modal-intro">Παρακαλούμε συμπληρώστε τον αριθμό ενηλίκων και παιδιών που θα παρευρεθούν.</p><form class="rsvp-form" id="rsvp-form"><input type="hidden" name="attendance" id="attendance-field" value="attending" /><label>Ονοματεπώνυμο<input name="name" autocomplete="name" required placeholder="Το ονοματεπώνυμό σας" /></label><label>Email<input name="email" type="email" autocomplete="email" placeholder="Προαιρετικό" /></label><div class="attendance-fields" id="attendance-fields"><div class="count-grid"><label>Ενήλικες<input name="adults" type="number" min="0" max="20" value="1" /></label><label>Παιδιά<input name="kids" type="number" min="0" max="20" value="0" /></label></div><p class="field-help">Μπορείτε να αναφέρετε τυχόν διατροφικές προτιμήσεις, αλλεργίες ή ανάγκες προσβασιμότητας στο πεδίο που ακολουθεί.</p></div><label>Παρατηρήσεις<textarea name="message" rows="4" placeholder="Προαιρετικό μήνυμα"></textarea></label><button class="button primary form-button" type="submit">Αποστολή</button><p class="form-status" id="form-status" role="status" aria-live="polite"></p></form></div></div>
+    <div class="modal" id="rsvp-modal" aria-hidden="true"><div class="modal-backdrop" data-rsvp-close></div><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button class="modal-close" type="button" data-rsvp-close aria-label="Κλείσιμο φόρμας">&times;</button><p class="section-kicker">Επιβεβαίωση παρουσίας</p><h2 id="modal-title">Θα παρευρεθούμε</h2><p class="modal-intro" id="modal-intro">Παρακαλούμε συμπληρώστε τον αριθμό ενηλίκων και παιδιών που θα παρευρεθούν.</p><form class="rsvp-form" id="rsvp-form"><input type="hidden" name="attendance" id="attendance-field" value="attending" /><label>Ονοματεπώνυμο<input name="name" autocomplete="name" required placeholder="Το ονοματεπώνυμό σας" /></label><div class="attendance-fields" id="attendance-fields"><div class="count-grid"><label>Ενήλικες<input name="adults" type="number" min="0" max="20" value="1" /></label><label>Παιδιά<input name="kids" id="kids-field" type="number" min="0" max="20" value="0" /></label></div><p class="field-help kids-menu-note" id="kids-menu-note" hidden>Παρακαλώ, ενημερώστε μας αν για τα παιδιά προτιμάτε το παιδικό μενού.</p></div><label>Παρατηρήσεις<textarea name="message" rows="4" placeholder="Προαιρετικό μήνυμα"></textarea></label><button class="button primary form-button" type="submit">Αποστολή</button><p class="form-status" id="form-status" role="status" aria-live="polite"></p></form></div></div>
     <script src="script.js"></script>
   </body>
 </html>

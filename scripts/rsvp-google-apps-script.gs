@@ -20,18 +20,23 @@ function doPost(e) {
     ).setMimeType(ContentService.MimeType.JSON);
   }
 
-  sheet.appendRow([
-    new Date(),
-    data.name || "",
-    data.email || "",
-    data.attendance || "",
-    data.adultMenus || "0",
-    data.kidMenus || "0",
-    data.totalGuests || "0",
-    data.message || "",
-    data.submittedAt || "",
-    data.source || "",
-  ]);
+  const headers = sheet
+    .getRange(1, 1, 1, sheet.getLastColumn())
+    .getValues()[0];
+  const values = {
+    "Received at": new Date(),
+    "Name": data.name || "",
+    "Email": "",
+    "Attendance": data.attendance || "",
+    "Adult menus": data.adultMenus || "0",
+    "Kid menus": data.kidMenus || "0",
+    "Total guests": data.totalGuests || "0",
+    "Message": data.message || "",
+    "Submitted at": data.submittedAt || "",
+    "Source": data.source || "",
+  };
+
+  sheet.appendRow(headers.map((header) => values[header] ?? ""));
 
   return ContentService.createTextOutput(
     JSON.stringify({ ok: true }),
@@ -52,7 +57,6 @@ function getSheet(sheetName, isWish) {
       : [
           "Received at",
           "Name",
-          "Email",
           "Attendance",
           "Adult menus",
           "Kid menus",

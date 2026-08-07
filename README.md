@@ -8,6 +8,7 @@ Static wedding invitation site for Antonis and Eirini, dated 27 September 2026 i
 - `styles.css` contains the visual system, responsive layout, and animation styling.
 - `script.js` contains the RSVP, wishes, gift, photo preview, and invitation interactions.
 - `assets/wedding-invitation-template.jpg` is the real invitation artwork used by the hero.
+- `assets/wedding-invitation-back.png` is the reverse-side artwork rendered from the supplied PDF.
 - `assets/popup-texture.jpg` is the textured background used by RSVP popups.
 - `scripts/rsvp-google-apps-script.gs` is a ready-to-paste Google Sheets receiver.
 
@@ -22,7 +23,6 @@ rsvpEndpoint: "https://your-endpoint-here"
 The RSVP payload stores:
 
 - name
-- optional email
 - attendance: `attending` or `declined`
 - adult menu count
 - kid menu count
@@ -57,15 +57,13 @@ The supplied Apps Script creates a separate `Wishes` sheet automatically.
 
 ## Gift Setup
 
-Add the real IBAN in `script.js` when it is available:
+The configured IBAN is stored in `script.js`:
 
 ```js
-giftIban: "GR00 0000 0000 0000 0000 0000 000"
+giftIban: "GR0602601630000860201065201"
 ```
 
-Until then, the page shows that the IBAN will be announced soon and does not display a copy button.
-
-You do not need guest emails to register RSVPs in a Google Sheet. Add guest email only if you want confirmation emails or follow-up messages. If you want notification emails to yourself, Formspree handles that by default; Google Apps Script can also send you an email with `MailApp.sendEmail`.
+The website displays the IBAN with a copy button. Guest email addresses are not collected by the RSVP form.
 
 ## Photo Upload Setup
 
