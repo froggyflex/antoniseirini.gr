@@ -31,6 +31,8 @@ function doPost(e) {
     "Adult menus": data.adultMenus || "0",
     "Kid menus": data.kidMenus || "0",
     "Total guests": data.totalGuests || "0",
+    "Ceremony": data.ceremonyAttendance || "false",
+    "Reception": data.receptionAttendance || "false",
     "Message": data.message || "",
     "Submitted at": data.submittedAt || "",
     "Source": data.source || "",
@@ -46,25 +48,39 @@ function doPost(e) {
 function getSheet(sheetName, isWish) {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = spreadsheet.getSheetByName(sheetName);
+  const requiredHeaders = isWish
+    ? ["Received at", "Name", "Wish", "Submitted at", "Source"]
+    : [
+        "Received at",
+        "Name",
+        "Attendance",
+        "Adult menus",
+        "Kid menus",
+        "Total guests",
+        "Ceremony",
+        "Reception",
+        "Message",
+        "Submitted at",
+        "Source",
+      ];
 
   if (!sheet) {
     sheet = spreadsheet.insertSheet(sheetName);
   }
 
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(isWish
-      ? ["Received at", "Name", "Wish", "Submitted at", "Source"]
-      : [
-          "Received at",
-          "Name",
-          "Attendance",
-          "Adult menus",
-          "Kid menus",
-          "Total guests",
-          "Message",
-          "Submitted at",
-          "Source",
-        ]);
+    sheet.appendRow(requiredHeaders);
+  } else {
+    const currentHeaders = sheet
+      .getRange(1, 1, 1, sheet.getLastColumn())
+      .getValues()[0];
+    const missingHeaders = requiredHeaders.filter((header) => !currentHeaders.includes(header));
+
+    if (missingHeaders.length) {
+      sheet
+        .getRange(1, sheet.getLastColumn() + 1, 1, missingHeaders.length)
+        .setValues([missingHeaders]);
+    }
   }
 
   return sheet;

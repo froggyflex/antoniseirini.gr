@@ -97,9 +97,16 @@ async function submitRsvp(event) {
   const adultMenus = attendance === "attending" ? Number(data.get("adults") || 0) : 0;
   const kidMenus = attendance === "attending" ? Number(data.get("kids") || 0) : 0;
   const totalGuests = adultMenus + kidMenus;
+  const ceremonyAttendance = attendance === "attending" && data.get("ceremony") === "yes";
+  const receptionAttendance = attendance === "attending" && data.get("reception") === "yes";
 
   if (attendance === "attending" && totalGuests < 1) {
     statusEl.textContent = "Προσθέστε τουλάχιστον έναν ενήλικα ή ένα παιδί.";
+    return;
+  }
+
+  if (attendance === "attending" && !ceremonyAttendance && !receptionAttendance) {
+    statusEl.textContent = "Επιλέξτε το μυστήριο, τη δεξίωση ή και τα δύο.";
     return;
   }
 
@@ -109,6 +116,8 @@ async function submitRsvp(event) {
     adultMenus,
     kidMenus,
     totalGuests,
+    ceremonyAttendance,
+    receptionAttendance,
     message: data.get("message"),
     submittedAt: new Date().toISOString(),
     source: window.location.href,
@@ -131,6 +140,8 @@ async function submitRsvp(event) {
       adultMenus: String(payload.adultMenus),
       kidMenus: String(payload.kidMenus),
       totalGuests: String(payload.totalGuests),
+      ceremonyAttendance: String(payload.ceremonyAttendance),
+      receptionAttendance: String(payload.receptionAttendance),
       message: payload.message || "",
       submittedAt: payload.submittedAt,
       source: payload.source,
