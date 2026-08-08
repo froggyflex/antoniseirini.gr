@@ -12,38 +12,24 @@ Static wedding invitation site for Antonis and Eirini, dated 27 September 2026 i
 - `assets/popup-texture.jpg` is the textured background used by RSVP popups.
 - `scripts/rsvp-google-apps-script.gs` is a ready-to-paste Google Sheets receiver.
 
-## RSVP Setup
+## Google Sheets Guest Management
 
-The RSVP modal is ready, but it needs a destination before real guest replies are saved. In `script.js`, set:
+The recommended backend is the supplied Google Apps Script receiver. It turns a private Google Sheet owned by the wedding Gmail account into the source of truth for RSVPs and wishes.
+
+The workbook contains:
+
+- `Dashboard`: live operational totals.
+- `Guests`: one current row per guest or family, including attendance, ceremony/reception choices, adult and child counts, notes, and update history indicators.
+- `RSVP History`: an immutable record of every original and changed reply.
+- `Wishes`: wishes with exact/possible guest-name matches and repeat-wish warnings.
+
+Follow [GOOGLE_SHEETS_SETUP.md](GOOGLE_SHEETS_SETUP.md) to create and deploy the workbook receiver. Once deployed, set:
 
 ```js
-rsvpEndpoint: "https://your-endpoint-here"
+rsvpEndpoint: "https://script.google.com/macros/s/DEPLOYMENT_ID/exec"
 ```
 
-The RSVP payload stores:
-
-- name
-- attendance: `attending` or `declined`
-- adult menu count
-- kid menu count
-- total guests
-- optional note
-- submission date and source page
-
-Practical options:
-
-1. Formspree: easiest setup. Create a form at `formspree.io`, copy the endpoint URL, and paste it into `rsvpEndpoint`. Replies can be emailed to you and exported.
-2. Google Apps Script + Google Sheets: best if you want replies in a spreadsheet you own. Create a Google Sheet, open Extensions > Apps Script, paste `scripts/rsvp-google-apps-script.gs`, deploy it as a web app, and paste the deployed web app URL into `rsvpEndpoint`.
-3. Custom backend: best if you later want admin pages, authentication, SMS/WhatsApp reminders, or stricter validation.
-
 Until the endpoint is configured, submitted RSVPs are not sent anywhere. The browser console will show a preview payload for testing.
-
-For the Google Apps Script deployment, use:
-
-- Execute as: `Me`
-- Who has access: `Anyone`
-
-The site sends a simple form-encoded payload so the same RSVP flow works with Formspree and Google Apps Script.
 
 ## Wishes Setup
 
@@ -53,7 +39,7 @@ The wishes form can use the same Google Apps Script URL as RSVP. Leave `wishesEn
 wishesEndpoint: "https://your-endpoint-here"
 ```
 
-The supplied Apps Script creates a separate `Wishes` sheet automatically.
+The supplied Apps Script creates and formats the `Wishes` sheet automatically. The website does not reveal match information to guests; those review flags are only visible in the private workbook.
 
 ## Gift Setup
 
@@ -67,20 +53,11 @@ The website displays the IBAN with a copy button. Guest email addresses are not 
 
 ## Photo Upload Setup
 
-The photo section previews selected images now, but real uploads require storage. In `script.js`, set:
+Photo uploads use the same Google Apps Script endpoint as RSVPs and wishes. The setup function creates a private Google Drive folder named `Antonis & Eirini - Wedding Photo Uploads` and a `Photos` management tab.
 
-```js
-photoUploadEndpoint: "https://your-upload-endpoint-here"
-```
+Each upload is limited to 8 MB and the website sends up to 12 images sequentially per submission. Supported formats are JPG, PNG, WEBP, HEIC, and HEIF. The `Photos` tab records the uploader, original filename, file size, Drive link, timestamp, and RSVP-name match.
 
-Recommended storage options:
-
-1. Uploadcare: easiest guest upload widget/storage service.
-2. Cloudinary: good image storage and transformations.
-3. Supabase Storage: good if you want your own storage bucket and database.
-4. Custom backend: best for approval workflows and private galleries.
-
-Do not rely on the static website itself for storage. Guest photos need an external account or backend with enough storage quota.
+The folder is private by default. Do not make it public; guests upload through the web app and do not need Drive access. Google Drive storage is shared with the owning Gmail account, so available space should be checked before the wedding. Uploads stop before they consume the final 1 GB of the account's storage.
 
 ## Local Preview
 

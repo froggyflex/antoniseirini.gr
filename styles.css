@@ -681,12 +681,53 @@ section:not(.hero)::after {
   gap: 10px;
 }
 
-.photo-preview img {
+.photo-preview-item {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(137, 145, 127, 0.18);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.photo-preview-item img,
+.photo-preview-placeholder {
   width: 100%;
   aspect-ratio: 1;
-  border-radius: 6px;
   object-fit: cover;
   background: var(--paper);
+}
+
+.photo-preview-placeholder {
+  display: grid;
+  place-items: center;
+  color: var(--sage-deep);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.photo-preview-item figcaption {
+  display: grid;
+  gap: 2px;
+  padding: 8px;
+  color: var(--ink);
+}
+
+.photo-preview-item strong {
+  overflow: hidden;
+  font-size: 0.72rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.photo-preview-item small {
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+#photo-submit:disabled {
+  cursor: wait;
+  opacity: 0.62;
 }
 
 .rsvp-section {

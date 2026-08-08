@@ -1,9 +1,10 @@
 const CONFIG = {
-  rsvpEndpoint: "",
+  rsvpEndpoint: "https://script.google.com/macros/s/AKfycbx4GnDYccJuficQdT0SJ0y_uYZAJ-Lg-fZLzhioPuuuzhNr2iZQg-e_hVl_po1xECUT/exec",
   wishesEndpoint: "",
   photoUploadEndpoint: "",
   giftIban: "GR0602601630000860201065201",
   maxPhotoUploadMb: 8,
+  maxPhotoFiles: 12,
   couple: "Αντώνης & Ειρήνη",
 };
 
@@ -26,6 +27,7 @@ const photoForm = document.querySelector("#photo-form");
 const photoFiles = document.querySelector("#photo-files");
 const photoPreview = document.querySelector("#photo-preview");
 const photoStatus = document.querySelector("#photo-status");
+const photoSubmit = document.querySelector("#photo-submit");
 const wishForm = document.querySelector("#wish-form");
 const wishStatus = document.querySelector("#wish-status");
 const giftIban = document.querySelector("#gift-iban");
@@ -163,9 +165,16 @@ async function submitRsvp(event) {
       throw new Error(`RSVP failed with status ${response.status}`);
     }
 
+    const result = await response.json().catch(() => ({ ok: true }));
+    if (result.ok === false) {
+      throw new Error(result.message || "The RSVP could not be saved.");
+    }
+
     form.reset();
     updateKidsMenuNote();
-    statusEl.textContent = "Ευχαριστούμε! Η απάντησή σας στάλθηκε.";
+    statusEl.textContent = result.updatedExisting
+      ? "Ευχαριστούμε! Η προηγούμενη απάντησή σας ενημερώθηκε."
+      : "Ευχαριστούμε! Η απάντησή σας στάλθηκε.";
     setTimeout(closeRsvpModal, 900);
   } catch (error) {
     console.error(error);
@@ -207,6 +216,11 @@ async function submitWish(event) {
       throw new Error(`Wish submission failed with status ${response.status}`);
     }
 
+    const result = await response.json().catch(() => ({ ok: true }));
+    if (result.ok === false) {
+      throw new Error(result.message || "The wish could not be saved.");
+    }
+
     wishForm.reset();
     wishStatus.textContent = "Ευχαριστούμε! Η ευχή σας στάλθηκε.";
   } catch (error) {
@@ -239,23 +253,61 @@ function renderPhotoPreview() {
   photoPreview.innerHTML = "";
   photoStatus.textContent = "";
 
-  Array.from(photoFiles.files).slice(0, 9).forEach((file) => {
-    const image = document.createElement("img");
-    image.src = URL.createObjectURL(file);
-    image.alt = file.name;
-    image.addEventListener("load", () => URL.revokeObjectURL(image.src), {
-      once: true,
-    });
-    photoPreview.append(image);
+  const files = Array.from(photoFiles.files).slice(0, CONFIG.maxPhotoFiles);
+  files.forEach((file) => {
+    const item = document.createElement("figure");
+    item.className = "photo-preview-item";
+    const extension = file.name.split(".").pop()?.toUpperCase() || "IMAGE";
+    const canPreview = !/\.(heic|heif)$/i.test(file.name);
+
+    if (canPreview) {
+      const image = document.createElement("img");
+      const objectUrl = URL.createObjectURL(file);
+      image.src = objectUrl;
+      image.alt = "";
+      const releaseUrl = () => URL.revokeObjectURL(objectUrl);
+      image.addEventListener("load", releaseUrl, { once: true });
+      image.addEventListener("error", releaseUrl, { once: true });
+      item.append(image);
+    } else {
+      const placeholder = document.createElement("span");
+      placeholder.className = "photo-preview-placeholder";
+      placeholder.textContent = extension;
+      item.append(placeholder);
+    }
+
+    const caption = document.createElement("figcaption");
+    caption.innerHTML = `<strong></strong><small>${(file.size / 1024 / 1024).toFixed(1)} MB</small>`;
+    caption.querySelector("strong").textContent = file.name;
+    item.append(caption);
+    photoPreview.append(item);
   });
+
+  if (photoFiles.files.length > CONFIG.maxPhotoFiles) {
+    photoStatus.textContent = `Μπορείτε να στείλετε έως ${CONFIG.maxPhotoFiles} φωτογραφίες κάθε φορά.`;
+  } else if (files.length) {
+    const totalMb = files.reduce((total, file) => total + file.size, 0) / 1024 / 1024;
+    photoStatus.textContent = `${files.length} φωτογραφίες επιλέχθηκαν · ${totalMb.toFixed(1)} MB συνολικά`;
+  }
 }
 
 async function submitPhotos(event) {
   event.preventDefault();
 
   const files = Array.from(photoFiles.files);
+  const uploaderName = String(new FormData(photoForm).get("photoName") || "").trim();
   if (!files.length) {
     photoStatus.textContent = "Επιλέξτε πρώτα τουλάχιστον μία φωτογραφία.";
+    return;
+  }
+
+  if (!uploaderName) {
+    photoStatus.textContent = "Συμπληρώστε το ονοματεπώνυμό σας.";
+    return;
+  }
+
+  if (files.length > CONFIG.maxPhotoFiles) {
+    photoStatus.textContent = `Μπορείτε να στείλετε έως ${CONFIG.maxPhotoFiles} φωτογραφίες κάθε φορά.`;
     return;
   }
 
@@ -266,36 +318,98 @@ async function submitPhotos(event) {
     return;
   }
 
-  if (!CONFIG.photoUploadEndpoint) {
+  const unsupported = files.find((file) => !isSupportedPhoto(file));
+  if (unsupported) {
+    photoStatus.textContent = `Ο τύπος του αρχείου ${unsupported.name} δεν υποστηρίζεται.`;
+    return;
+  }
+
+  const endpoint = CONFIG.photoUploadEndpoint || CONFIG.rsvpEndpoint;
+  if (!endpoint) {
     photoStatus.textContent =
       "Η αποστολή φωτογραφιών θα ενεργοποιηθεί πριν από τον γάμο.";
     return;
   }
 
-  const data = new FormData(photoForm);
-  data.append("submittedAt", new Date().toISOString());
-  data.append("source", window.location.href);
-
-  photoStatus.textContent = "Μεταφόρτωση...";
+  photoSubmit.disabled = true;
+  const failures = [];
+  let uploaded = 0;
 
   try {
-    const response = await fetch(CONFIG.photoUploadEndpoint, {
-      method: "POST",
-      body: data,
-    });
+    for (let index = 0; index < files.length; index += 1) {
+      const file = files[index];
+      photoStatus.textContent = `Αποστολή ${index + 1} από ${files.length}: ${file.name}`;
 
-    if (!response.ok) {
-      throw new Error(`Photo upload failed with status ${response.status}`);
+      try {
+        const fileData = await readFileAsBase64(file);
+        const body = {
+          type: "photo",
+          name: uploaderName,
+          fileName: file.name,
+          mimeType: file.type || "",
+          fileSize: String(file.size),
+          fileData,
+          submittedAt: new Date().toISOString(),
+          source: window.location.href,
+        };
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=UTF-8" },
+          body: JSON.stringify(body),
+        });
+        if (!response.ok) {
+          throw new Error(`Photo upload failed with status ${response.status}`);
+        }
+
+        const result = await response.json().catch(() => ({ ok: true }));
+        if (result.ok === false) {
+          throw new Error(result.message || "The photo could not be saved.");
+        }
+        uploaded += 1;
+      } catch (error) {
+        console.error(error);
+        failures.push(file.name);
+      }
     }
 
-    photoForm.reset();
-    photoPreview.innerHTML = "";
-    photoStatus.textContent = "Ευχαριστούμε! Οι φωτογραφίες σας ανέβηκαν.";
+    if (!failures.length) {
+      photoForm.reset();
+      photoPreview.innerHTML = "";
+      photoStatus.textContent = `Ευχαριστούμε! Ανέβηκαν ${uploaded} φωτογραφίες.`;
+    } else {
+      photoStatus.textContent = `Ανέβηκαν ${uploaded} από ${files.length}. Δεν στάλθηκαν: ${failures.join(", ")}.`;
+    }
   } catch (error) {
     console.error(error);
     photoStatus.textContent =
       "Οι φωτογραφίες δεν μπόρεσαν να ανέβουν. Δοκιμάστε ξανά αργότερα.";
+  } finally {
+    photoSubmit.disabled = false;
   }
+}
+
+function isSupportedPhoto(file) {
+  const validExtension = /\.(jpe?g|png|webp|heic|heif)$/i.test(file.name);
+  const validMime = !file.type || [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/heic",
+    "image/heif",
+  ].includes(file.type.toLowerCase());
+  return validExtension && validMime;
+}
+
+function readFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      const result = String(reader.result || "");
+      resolve(result.includes(",") ? result.split(",", 2)[1] : result);
+    }, { once: true });
+    reader.addEventListener("error", () => reject(reader.error), { once: true });
+    reader.readAsDataURL(file);
+  });
 }
 
 function resizeCanvas() {
