@@ -156,7 +156,9 @@ function doPost(e) {
     console.error(error);
     return jsonResponse({
       ok: false,
-      message: "The response could not be saved.",
+      message: error && error.message
+        ? String(error.message)
+        : "The response could not be saved.",
     });
   } finally {
     if (lock.hasLock()) lock.releaseLock();

@@ -66,3 +66,5 @@ After future backend code changes, use **Deploy > Manage deployments > Edit**, s
 The workbook also includes a **Wedding Manager** menu. Use **Refresh dashboard** after changing dashboard code or if you want to rebuild the visual layout. Refreshing the dashboard does not delete guest, history, wish, or photo records.
 
 Adding Drive uploads introduces a new Google Drive permission. Run `setupWeddingWorkbook` once after installing this version and approve the additional permission. Then create a **new web-app deployment version** so the public `/exec` endpoint receives the photo-upload code. The `/exec` URL remains the same.
+
+If RSVP and wishes work but photos return an upload error, the deployed web app has not yet been authorized to write to Drive. Run `setupWeddingWorkbook` again from the Apps Script editor, approve the requested Google Drive access, and then use **Deploy > Manage deployments > Edit > New version > Deploy**. Merely saving `Code.gs` does not update the public `/exec` deployment.

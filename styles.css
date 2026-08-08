@@ -36,6 +36,11 @@ body {
 }
 
 body.modal-open {
+  position: fixed;
+  top: var(--modal-scroll-position, 0);
+  right: 0;
+  left: 0;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -3369,6 +3374,51 @@ footer small {
 }
 
 @media (max-width: 700px) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body:not(.modal-open) {
+    touch-action: pan-y;
+  }
+
+  .site-header,
+  .site-header.is-scrolled,
+  .button.ghost,
+  .photo-form,
+  .wish-form,
+  .gift-details,
+  .rsvp-form,
+  .modal-backdrop {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .rsvp-choice-actions .button,
+  .modal-close,
+  [data-rsvp-close] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .modal {
+    height: 100dvh;
+    min-height: -webkit-fill-available;
+  }
+
+  .modal-card {
+    max-height: calc(100dvh - 24px);
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .invite-back img {
     width: 100%;
     height: 100%;

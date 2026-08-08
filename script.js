@@ -1,7 +1,7 @@
 const CONFIG = {
   rsvpEndpoint: "https://script.google.com/macros/s/AKfycbx4GnDYccJuficQdT0SJ0y_uYZAJ-Lg-fZLzhioPuuuzhNr2iZQg-e_hVl_po1xECUT/exec",
   wishesEndpoint: "",
-  photoUploadEndpoint: "",
+  photoUploadEndpoint: "https://script.google.com/macros/s/AKfycbx4GnDYccJuficQdT0SJ0y_uYZAJ-Lg-fZLzhioPuuuzhNr2iZQg-e_hVl_po1xECUT/exec",
   giftIban: "GR0602601630000860201065201",
   maxPhotoUploadMb: 8,
   maxPhotoFiles: 12,
@@ -46,6 +46,9 @@ let invitationReadyTimer;
 let envelopeReleaseTimer;
 let heartCurvePoints;
 let magicDustFrame;
+let modalScrollPosition = 0;
+let lastRsvpPointerOpen = 0;
+let lastRsvpTrigger = null;
 
 function setHeaderState() {
   header.classList.toggle("is-scrolled", window.scrollY > window.innerHeight * 0.82);
@@ -85,16 +88,27 @@ function openRsvpModal(attendance) {
     : "Παρακαλούμε καταχωρίστε την απάντησή σας, ώστε να ενημερωθεί η λίστα των προσκεκλημένων.";
   attendanceFields.hidden = !isAttending;
   updateKidsMenuNote();
+  modalScrollPosition = window.scrollY;
+  lastRsvpTrigger = document.activeElement;
+  document.body.style.setProperty("--modal-scroll-position", `-${modalScrollPosition}px`);
   modal.classList.add("is-open");
   modal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
-  form.querySelector("input[name='name']").focus();
+
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    window.requestAnimationFrame(() => {
+      form.querySelector("input[name='name']").focus({ preventScroll: true });
+    });
+  }
 }
 
 function closeRsvpModal() {
   modal.classList.remove("is-open");
   modal.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
+  document.body.style.removeProperty("--modal-scroll-position");
+  window.scrollTo(0, modalScrollPosition);
+  lastRsvpTrigger?.focus?.({ preventScroll: true });
 }
 
 async function submitRsvp(event) {
@@ -361,14 +375,23 @@ async function submitPhotos(event) {
           throw new Error(`Photo upload failed with status ${response.status}`);
         }
 
-        const result = await response.json().catch(() => ({ ok: true }));
-        if (result.ok === false) {
+        const responseText = await response.text();
+        let result;
+        try {
+          result = JSON.parse(responseText);
+        } catch {
+          throw new Error("Η υπηρεσία αποθήκευσης επέστρεψε μη έγκυρη απάντηση.");
+        }
+        if (result.ok !== true) {
           throw new Error(result.message || "The photo could not be saved.");
         }
         uploaded += 1;
       } catch (error) {
         console.error(error);
-        failures.push(file.name);
+        failures.push({
+          name: file.name,
+          message: String(error?.message || "Άγνωστο σφάλμα αποστολής."),
+        });
       }
     }
 
@@ -377,7 +400,9 @@ async function submitPhotos(event) {
       photoPreview.innerHTML = "";
       photoStatus.textContent = `Ευχαριστούμε! Ανέβηκαν ${uploaded} φωτογραφίες.`;
     } else {
-      photoStatus.textContent = `Ανέβηκαν ${uploaded} από ${files.length}. Δεν στάλθηκαν: ${failures.join(", ")}.`;
+      const failedNames = failures.map((failure) => failure.name).join(", ");
+      const firstReason = failures[0]?.message;
+      photoStatus.textContent = `Ανέβηκαν ${uploaded} από ${files.length}. Δεν στάλθηκαν: ${failedNames}.${firstReason ? ` Αιτία: ${firstReason}` : ""}`;
     }
   } catch (error) {
     console.error(error);
@@ -851,7 +876,15 @@ folderPocket.addEventListener("animationend", (event) => {
   }
 });
 document.querySelectorAll("[data-rsvp-open]").forEach((button) => {
-  button.addEventListener("click", () => openRsvpModal(button.dataset.rsvpOpen));
+  button.addEventListener("pointerup", (event) => {
+    if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
+    lastRsvpPointerOpen = Date.now();
+    openRsvpModal(button.dataset.rsvpOpen);
+  });
+  button.addEventListener("click", () => {
+    if (Date.now() - lastRsvpPointerOpen < 700) return;
+    openRsvpModal(button.dataset.rsvpOpen);
+  });
 });
 document.querySelectorAll("[data-rsvp-close]").forEach((button) => {
   button.addEventListener("click", closeRsvpModal);
