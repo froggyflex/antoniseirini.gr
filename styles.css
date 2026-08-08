@@ -614,6 +614,15 @@ section:not(.hero)::after {
   border-top: 1px solid rgba(45, 41, 35, 0.15);
 }
 
+.timeline-item.timeline-continuation {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.timeline-continuation > div {
+  grid-column: 2;
+}
+
 .time {
   color: var(--sage-deep);
   font-family: Georgia, serif;
@@ -1155,6 +1164,10 @@ footer p {
   .timeline-item {
     grid-template-columns: 1fr;
     gap: 10px;
+  }
+
+  .timeline-continuation > div {
+    grid-column: 1;
   }
 
   .paper-invite {
