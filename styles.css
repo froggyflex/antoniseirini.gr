@@ -3361,6 +3361,56 @@ footer small {
   color: var(--sage-deep);
 }
 
+/* A quiet continuation cue keeps the invitation central while making the
+   remaining wedding information discoverable on the first screen. */
+.content-scroll-cue {
+  position: fixed;
+  z-index: 12;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  color: rgba(255, 255, 248, 0.88);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-shadow: 0 2px 12px rgba(48, 52, 38, 0.62);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 10px);
+  transition: opacity 420ms ease, transform 420ms ease;
+}
+
+.content-scroll-cue.is-visible:not(.is-hidden) {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.content-scroll-cue i {
+  width: 11px;
+  height: 11px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  animation: scroll-cue-breathe 1.8s ease-in-out infinite;
+}
+
+.content-scroll-cue:focus-visible {
+  outline: 2px solid rgba(255, 255, 248, 0.92);
+  outline-offset: 7px;
+}
+
+@keyframes scroll-cue-breathe {
+  0%, 100% { opacity: 0.45; transform: translateY(-2px) rotate(45deg); }
+  50% { opacity: 1; transform: translateY(4px) rotate(45deg); }
+}
+
 .kids-menu-note {
   margin: 14px 0 0;
   padding: 12px 14px;
@@ -3445,5 +3495,20 @@ footer small {
   .contact-list {
     display: grid;
     grid-template-columns: 1fr 1fr;
+  }
+
+  .content-scroll-cue {
+    bottom: max(12px, env(safe-area-inset-bottom));
+    width: max-content;
+    max-width: calc(100vw - 40px);
+    font-size: 0.62rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-scroll-cue,
+  .content-scroll-cue i {
+    animation: none;
+    transition-duration: 160ms;
   }
 }

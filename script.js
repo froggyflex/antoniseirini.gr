@@ -40,6 +40,7 @@ const magicDustCanvas = document.querySelector("#magic-dust");
 const magicDustContext = magicDustCanvas?.getContext("2d");
 const inviteMotion = document.querySelector(".invite-motion");
 const folderPocket = document.querySelector(".folder-pocket");
+const scrollCue = document.querySelector(".content-scroll-cue");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let envelopeSequenceStarted = false;
 let invitationReadyTimer;
@@ -52,6 +53,7 @@ let lastRsvpTrigger = null;
 
 function setHeaderState() {
   header.classList.toggle("is-scrolled", window.scrollY > window.innerHeight * 0.82);
+  scrollCue?.classList.toggle("is-hidden", window.scrollY > 24);
 }
 
 function updateKidsMenuNote() {
@@ -835,11 +837,13 @@ function startInvitationIntro() {
     invite.classList.remove("is-replaying");
     invite.classList.add("is-ready", "is-flipped", "intro-complete");
     updateInvitationLabels(true);
+    window.setTimeout(() => scrollCue?.classList.add("is-visible"), 250);
     return;
   }
 
   envelopeReleaseTimer = window.setTimeout(releaseEnvelopeAfterCard, 3240);
   invitationReadyTimer = window.setTimeout(completeEnvelopeSequence, 4400);
+  window.setTimeout(() => scrollCue?.classList.add("is-visible"), 4800);
 }
 
 window.addEventListener("scroll", setHeaderState, { passive: true });
