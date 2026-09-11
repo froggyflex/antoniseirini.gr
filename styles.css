@@ -2593,6 +2593,15 @@ footer small {
   overflow-wrap: anywhere;
 }
 
+.bank-name {
+  display: block;
+  margin: 8px 0 5px;
+  color: rgba(86, 97, 78, 0.74);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
 .copy-iban {
   min-width: 180px;
 }
